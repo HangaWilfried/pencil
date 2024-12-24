@@ -13,5 +13,19 @@ export default ts.config(
         parser: "@typescript-eslint/parser",
       },
     },
+    rules: {
+      "vue/html-self-closing": [
+        "error",
+        {
+          html: {
+            void: "always",
+            normal: "never",
+            component: "always",
+          },
+          svg: "always",
+          math: "always",
+        },
+      ],
+    },
   },
 );
