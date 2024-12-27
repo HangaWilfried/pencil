@@ -22,12 +22,8 @@
             </ViewMoreAction>
           </template>
           <template v-else>
-            <RouterLink to="/auth/register">
-              Create account
-            </RouterLink>
-            <RouterLink to="/auth/login">
-              Login
-            </RouterLink>
+            <RouterLink to="/auth/register"> Create account </RouterLink>
+            <RouterLink to="/auth/login"> Login </RouterLink>
           </template>
         </div>
       </div>

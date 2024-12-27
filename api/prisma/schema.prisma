@@ -1,15 +1,31 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
-model Cycle {
-  id    String     @id @default(uuid())
-  name  String
-  code  String
-  description String?
+model Post {
+  id  String  @id @default(uuid())
+  title String
+  content String
+  user  User  @relation(fields: [owner], references: [id])
+  owner String  @unique
+}
+
+model User {
+  id  String  @id @default(uuid())
+  lastname  String
+  firstname String
+  email String @unique
+  password String
+  posts Post[]
 }

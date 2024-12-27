@@ -6,30 +6,46 @@
     "start": "ts-node src/index.ts --watch",
     "build": "tsc",
     "serve": "node dist/index.js",
-    "lint": "eslint --fix {ts, js}"
+    "lint": "eslint 'src/**/*.{js,ts}'",
+    "format": "prettier --write ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@prisma/client": "^6.1.0",
+    "argon2": "^0.41.1",
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
     "express": "^4.21.2",
+    "joi": "^17.13.3",
     "mysql": "^2.18.1",
-    "passport-jwt": "^4.0.1",
-    "@prisma/client": "^6.1.0",
-    "joi": "^17.13.3"
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1"
   },
   "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/node": "^22.10.2",
     "@types/passport": "^1.0.17",
+    "@types/passport-jwt": "^4.0.1",
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.31.0",
+    "globals": "^15.14.0",
+    "prettier": "3.4.2",
+    "prisma": "^6.1.0",
     "typescript": "^5.7.2",
-    "@types/cors": "^2.8.17",
-    "prisma": "^6.1.0"
+    "typescript-eslint": "^8.18.2"
+  },
+  "lint-staged": {
+    "*.{js,ts,vue}": [
+      "eslint"
+    ],
+    "*.{graphql,json}": [
+      "prettier --write"
+    ]
   }
 }

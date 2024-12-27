@@ -2,7 +2,7 @@ import cors from "cors";
 import express from "express";
 import bodyParser from 'body-parser';
 
-import { createCycle, getCycleById, getCycles, editCycle } from "./services/cycles";
+import { getAllPosts, createPost, editPost, getPostById } from "./services/blog";
 
 const PORT= 4500;
 const app = express();
@@ -15,13 +15,13 @@ app.use(cors({
   origin: "http://localhost:5173",
 }))
 
-app.route("/api/cycle")
-  .get(getCycles)
-  .post(createCycle)
+app.route("/api/blog")
+  .get(getAllPosts)
+  .post(createPost)
 
-app.route("/api/cycle/:id")
-  .get(getCycleById)
-  .put(editCycle)
+app.route("/api/blog/:id")
+  .get(getPostById)
+  .put(editPost)
 
 
 app.listen(PORT, () => {
