@@ -1,28 +1,29 @@
-import { ExtractJwt, Strategy as JwtStrategy } from 'passport-jwt';
+import jwt from "jsonwebtoken";
+
+import { prisma } from "./orm";
+import { SECRET } from "./secret";
+import type { User } from "@prisma/client";
+import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt";
 
 const options = {
-    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: 'secret',
-    issuer: 'accounts.examplesoft.com',
-    audience: 'yoursite.net',
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: SECRET,
 };
 
+export const STRATEGY = new JwtStrategy(options, (jwt_payload, done) => {
+  const user = prisma.user.findFirst({
+    where: { id: jwt_payload.id },
+  });
+  if (user) return done(null, user);
+  return done(null, false);
+});
 
-function action (jwt_payload, done) {
-    User.findOne({id: jwt_payload.sub}, function (err, user) {
-        if (err) {
-            return done(err, false);
-        }
-        if (user) {
-            return done(null, user);
-        } else {
-            return done(null, false);
-            // or you could create a new account
-        }
-    });
-}
-
-
-
-const strategy = new JwtStrategy(options, action);
-export default strategy;
+export const generateJWT = async (user: User): Promise<string> => {
+  const payload = {
+    email: user.email,
+    lastname: user.lastname,
+    firstname: user.firstname,
+    id: user.id,
+  };
+  return jwt.sign(payload, SECRET, { expiresIn: "1h" });
+};

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/index.ts --watch",
+    "start": "nodemon --watch src --ext ts --exec ts-node src/index.ts",
     "build": "tsc",
     "serve": "node dist/index.js",
     "lint": "eslint 'src/**/*.{js,ts}'",
@@ -20,6 +20,7 @@
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
     "mysql": "^2.18.1",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1"
@@ -35,8 +36,10 @@
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.31.0",
     "globals": "^15.14.0",
+    "nodemon": "^3.1.9",
     "prettier": "3.4.2",
     "prisma": "^6.1.0",
+    "ts-node": "^10.9.2",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.18.2"
   },
