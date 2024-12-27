@@ -3,12 +3,14 @@ import express from "express";
 import bodyParser from "body-parser";
 
 import {
-  getAllPosts,
-  createPost,
   editPost,
+  createPost,
+  deletePost,
+  getAllPosts,
   getPostById,
+  getUserPosts,
 } from "./services/post";
-import { login, register } from "./services/user";
+import { getUserById, login, register } from "./services/user";
 
 import passport from "passport";
 import { STRATEGY } from "./services/jwt";
@@ -36,8 +38,14 @@ app
 app
   .route("/api/post/:id")
   .get(getPostById)
-  .put(passport.authenticate("jwt", { session: false }), editPost);
+  .put(passport.authenticate("jwt", { session: false }), editPost)
+  .delete(passport.authenticate("jwt", { session: false }), deletePost);
 
+app
+  .route("/api/user/:userId/posts")
+  .get(passport.authenticate("jwt", { session: false }), getUserPosts);
+
+app.route("/api/user/:id").get(getUserById);
 app.route("/api/auth/login").post(login);
 app.route("/api/auth/register").post(register);
 
