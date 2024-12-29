@@ -1,19 +1,19 @@
 export type RequestResponse<T = undefined> = {
-    data?: T;
-    error?: string;
+  data?: T;
+  error?: string;
 };
 
 export type JwtPayload = {
-    email: string;
-    lastname: string;
-    firstname: string;
-    id: string;
-    exp: number;
+  email: string;
+  lastname: string;
+  firstname: string;
+  id: string;
+  exp: number;
 };
 
 export type LoginDTO = {
-    email: string;
-    password: string;
+  email: string;
+  password: string;
 };
 
 export type RegisterDTO = {
@@ -24,27 +24,28 @@ export type RegisterDTO = {
 };
 
 export type UserDTO = {
-    firstname: string;
-    lastname: string;
-    email: string;
-    id: string;
+  firstname: string;
+  lastname: string;
+  email: string;
+  id: string;
 };
 
 export type PostDTO = {
-    id: string;
-    title: string;
-    content: string;
-    userId: string;
+  id: string;
+  title: string;
+  content: string;
+  userId: string;
+  createdAt: string;
 };
 
 export type RegisterPostDTO = {
-    title: string;
-    content: string;
-    userId: string;
+  title: string;
+  content: string;
+  userId: string;
 };
 
 export type UpdatePostDTO = {
-    title: string;
-    content: string;
-    id: string;
+  title: string;
+  content: string;
+  id: string;
 };

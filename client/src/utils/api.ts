@@ -30,14 +30,26 @@ export function useToken() {
       }
       return false;
     },
+    info() {
+      return this.decode();
+    },
     clear(): void {
       localStorage.removeItem("access-token");
     },
   };
 }
 
+const getHeader = () => {
+  const token = useToken().getToken();
+  const headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  if (token) headers.append("Authorization", `Bearer ${token}`);
+  return headers;
+};
+
 export function useClientApi() {
   const baseUrl = "http://localhost:4500/api";
+
   return {
     handleError(error: unknown) {
       console.log(error);
@@ -47,9 +59,7 @@ export function useClientApi() {
       try {
         const response = await fetch(`${baseUrl}/auth/login`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: getHeader(),
           body: JSON.stringify(credential),
         });
         const token = await response.text();
@@ -63,9 +73,7 @@ export function useClientApi() {
       try {
         await fetch(`${baseUrl}/auth/register`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: getHeader(),
           body: JSON.stringify(user),
         });
         return {};
@@ -77,9 +85,7 @@ export function useClientApi() {
       try {
         const response = await fetch(`${baseUrl}/user/${userId}`, {
           method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: getHeader(),
         });
         const user = await response.json();
         return { data: user };
@@ -91,9 +97,7 @@ export function useClientApi() {
       try {
         const response = await fetch(`${baseUrl}/post`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: getHeader(),
           body: JSON.stringify(post),
         });
         const id = await response.json();
@@ -106,9 +110,7 @@ export function useClientApi() {
       try {
         await fetch(`${baseUrl}/post/${post.id}`, {
           method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: getHeader(),
           body: JSON.stringify({
             content: post.content,
             title: post.title,
@@ -123,9 +125,7 @@ export function useClientApi() {
       try {
         const response = await fetch(`${baseUrl}/post/${postId}`, {
           method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: getHeader(),
         });
         const post = await response.json();
         return { data: post };
@@ -137,9 +137,7 @@ export function useClientApi() {
       try {
         const response = await fetch(`${baseUrl}/post`, {
           method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: getHeader(),
         });
         const posts = await response.json();
         return { data: posts };
@@ -151,9 +149,7 @@ export function useClientApi() {
       try {
         const response = await fetch(`${baseUrl}/user/${userId}/posts`, {
           method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: getHeader(),
         });
         const posts = await response.json();
         return { data: posts };
