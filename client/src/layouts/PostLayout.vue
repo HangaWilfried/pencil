@@ -4,7 +4,7 @@
       <div class="flex items-center gap-8 place-self-end">
         <LogoComponent />
         <input
-          v-if="route.name === 'home page'"
+          v-if="route.name === 'posts list page'"
           v-model="queryText"
           type="text"
           placeholder="search over posts..."
