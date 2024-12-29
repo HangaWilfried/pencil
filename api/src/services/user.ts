@@ -11,7 +11,6 @@ export async function login(req: Request, res: Response) {
     email: joi.string().required(),
     password: joi.string().required(),
   });
-
   try {
     const userCredential = await schema.validateAsync(req.body);
     const user = await prisma.user.findFirst({
@@ -19,7 +18,7 @@ export async function login(req: Request, res: Response) {
     });
     const message = "email or password are incorrect";
     if (!user) {
-      res.status(404).send(message);
+      res.status(404).json({ message });
       return;
     }
     const isPasswordOk = await argon.verify(
@@ -27,7 +26,7 @@ export async function login(req: Request, res: Response) {
       userCredential.password,
     );
     if (!isPasswordOk) {
-      res.status(400).send(message);
+      res.status(400).json({ message });
       return;
     }
 
@@ -52,7 +51,7 @@ export async function register(req: Request, res: Response) {
       where: { email: newUser.email },
     });
     if (existingUser) {
-      res.status(409).send("User already exists");
+      res.status(409).json({ message: "User already exists" });
       return;
     }
     const password = await argon.hash(newUser.password);
@@ -72,14 +71,14 @@ export async function getUserById(req: Request, res: Response) {
   try {
     const user = await prisma.user.findFirst({ where: { id: req.params.id } });
     if (!user) {
-      res.status(404).send("User not found");
+      res.status(404).json({ message: "User not found" });
       return;
     }
-    res.status(200).send({
+    res.status(200).json({
       firstname: user.firstname,
       lastname: user.lastname,
       email: user.email,
-      id: user.id
+      id: user.id,
     });
   } catch (error) {
     handleError(error, res);

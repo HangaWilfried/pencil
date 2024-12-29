@@ -8,7 +8,7 @@ export async function getAllPosts(req: Request, res: Response) {
   console.log("request", req);
   try {
     const posts = await prisma.post.findMany();
-    res.status(200).send(posts);
+    res.status(200).json(posts);
   } catch (error) {
     handleError(error, res);
   }
@@ -34,10 +34,10 @@ export async function getPostById(req: Request, res: Response) {
   try {
     const post = await prisma.post.findFirst({ where: { id: req.params.id } });
     if (!post) {
-      res.status(404).send("Post not found");
+      res.status(404).json({ message: "Post not found" });
       return;
     }
-    res.status(200).send(post);
+    res.status(200).json(post);
   } catch (error) {
     handleError(error, res);
   }
@@ -56,7 +56,7 @@ export async function editPost(req: Request, res: Response) {
     });
 
     if (!existingPost) {
-      res.status(404).send("Post not found");
+      res.status(404).json({ message: "Post not found" });
       return;
     }
     await prisma.post.update({
@@ -73,7 +73,7 @@ export async function deletePost(req: Request, res: Response) {
   try {
     const post = await prisma.post.findFirst({ where: { id: req.params.id } });
     if (!post) {
-      res.status(404).send("Post not found");
+      res.status(404).send({ message: "Post not found" });
       return;
     }
     await prisma.post.delete({
@@ -91,10 +91,10 @@ export async function getUserPosts(req: Request, res: Response) {
       where: { userId: req.params.userId },
     });
     if (!user) {
-      res.status(404).send("User not found");
+      res.status(404).json({ message: "User not found" });
       return;
     }
-    res.status(200).send(user);
+    res.status(200).json(user);
   } catch (error) {
     handleError(error, res);
   }
