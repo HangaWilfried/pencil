@@ -2,10 +2,10 @@ import joi from "joi";
 import { prisma } from "./orm";
 import { handleError } from "./types";
 
+import { User } from "@prisma/client";
 import { Request, Response } from "express";
 
 export async function getAllPosts(req: Request, res: Response) {
-  console.log("request", req);
   try {
     const posts = await prisma.post.findMany();
     res.status(200).json(posts);
@@ -15,13 +15,12 @@ export async function getAllPosts(req: Request, res: Response) {
 }
 
 export async function createPost(req: Request, res: Response) {
-  const schema = joi.object({
-    title: joi.string().required(),
-    content: joi.string().required(),
-    userId: joi.string().required(),
-  });
-
   try {
+    const schema = joi.object({
+      title: joi.string().required(),
+      content: joi.string().required(),
+      userId: joi.string().required(),
+    });
     const newPost = await schema.validateAsync(req.body);
     const postEntity = await prisma.post.create({ data: newPost });
     res.status(201).send(postEntity.id);
@@ -92,7 +91,7 @@ export async function deletePost(req: Request, res: Response) {
 export async function getUserPosts(req: Request, res: Response) {
   try {
     const user = await prisma.post.findMany({
-      where: { userId: req.params.userId },
+      where: { userId: (req.user as User).id },
     });
     if (!user) {
       res.status(404).json({ message: "User not found" });
@@ -143,16 +142,16 @@ export async function draftPost(req: Request, res: Response) {
 }
 
 export async function upsertFeedback(req: Request, res: Response) {
-  const postId = req.params.id;
-
-  const schema = joi.object({
-    message: joi.string().required(),
-    userId: joi.string().required(),
-    star: joi.number().optional(),
-    id: joi.string().optional(),
-  });
-
   try {
+    const userId = (req.user as User).id;
+    const postId = req.params.id;
+
+    const schema = joi.object({
+      message: joi.string().required(),
+      star: joi.number().optional(),
+      id: joi.string().optional(),
+    });
+
     const feedback = await schema.validateAsync(req.body);
     const post = await prisma.post.findFirst({
       where: { id: postId },
@@ -165,9 +164,9 @@ export async function upsertFeedback(req: Request, res: Response) {
       await prisma.feedback.update({
         where: { id: feedback.id },
         data: {
-          postId: postId,
+          userId,
+          postId,
           star: feedback.star,
-          userId: feedback.userId,
           message: feedback.message,
         }
       });
@@ -175,9 +174,9 @@ export async function upsertFeedback(req: Request, res: Response) {
     } else {
       await prisma.feedback.create({
         data: {
-          postId: postId,
+          userId,
+          postId,
           star: feedback.star,
-          userId: feedback.userId,
           message: feedback.message,
         }
       });
@@ -189,17 +188,16 @@ export async function upsertFeedback(req: Request, res: Response) {
 }
 
 export async function getFeedbacksByPostId(req: Request, res: Response) {
-  const postId = req.params.id;
-  const post = await prisma.post.findFirst({
-    where: { id: postId },
-  });
-
-  if (!post) {
-    res.status(404).json({ message: "Post not found" });
-    return;
-  }
-
   try {
+    const postId = req.params.id;
+    const post = await prisma.post.findFirst({
+      where: { id: postId },
+    });
+
+    if (!post) {
+      res.status(404).json({ message: "Post not found" });
+      return;
+    }
     const feedbacks = await prisma.feedback.findMany({
       where: { postId }
     });
@@ -230,4 +228,51 @@ export async function getPostRate(postId: string): Promise<number> {
   }, 0);
 
   return numerator/denominator;
+}
+
+export async function likePost(req: Request, res: Response) {
+  try {
+    const userId = (req.user as User).id;
+    const postId = req.params.id;
+
+    const post = await prisma.post.findFirst({
+      where: { id: postId },
+    });
+
+    if (!post) {
+      res.status(404).json({ message: "Post not found" });
+      return;
+    }
+
+    await prisma.like.create({
+      data: {
+        userId,
+        postId,
+      }
+    })
+
+  } catch (error) {
+    handleError(error, res);
+  }
+}
+
+export async function dislikePost(req: Request, res: Response) {
+  try {
+    const postId = req.params.id;
+    const userId = (req.user as User).id;
+
+    const post = await prisma.post.findFirst({
+      where: { id: postId },
+    });
+
+    if (!post) {
+      res.status(404).json({ message: "Post not found" });
+      return;
+    }
+    await prisma.like.deleteMany({
+      where: { userId, postId },
+    })
+  } catch (error) {
+    handleError(error, res);
+  }
 }

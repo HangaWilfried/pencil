@@ -4,21 +4,24 @@ import bodyParser from "body-parser";
 
 import {
   editPost,
+  likePost,
   draftPost,
   createPost,
   deletePost,
-  publishPost,
+  dislikePost,
   getAllPosts,
   getPostById,
+  publishPost,
   getUserPosts,
   upsertFeedback,
   getFeedbacksByPostId,
 } from "./services/post";
-import { getUserById, login, register } from "./services/user";
 
 import passport from "passport";
-import { STRATEGY } from "./services/jwt";
 import { prisma } from "./services/orm";
+
+import { extractTokenInfo, STRATEGY } from "./services/jwt";
+import { getUserById, login, register } from "./services/user";
 
 const PORT = 4500;
 const app = express();
@@ -45,11 +48,15 @@ app
   .put(passport.authenticate("jwt", { session: false }), editPost)
   .delete(passport.authenticate("jwt", { session: false }), deletePost);
 
+app
+    .route("/api/post/:id/like")
+    .put([passport.authenticate("jwt", { session: false }), extractTokenInfo], likePost)
+    .delete([passport.authenticate("jwt", { session: false }), extractTokenInfo], dislikePost);
 
 app
     .route("/api/post/:id/feedback")
     .get(getFeedbacksByPostId)
-    .post(passport.authenticate("jwt", { session: false }), upsertFeedback);
+    .post([passport.authenticate("jwt", { session: false }), extractTokenInfo], upsertFeedback);
 
 app
   .route("/api/post/:id/draft")
@@ -60,8 +67,8 @@ app
   .put(passport.authenticate("jwt", { session: false }), publishPost);
 
 app
-  .route("/api/user/:userId/posts")
-  .get(passport.authenticate("jwt", { session: false }), getUserPosts);
+  .route("/api/my-posts")
+  .get([passport.authenticate("jwt", { session: false }), extractTokenInfo], getUserPosts);
 
 app.route("/api/user/:id").get(getUserById);
 app.route("/api/auth/login").post(login);

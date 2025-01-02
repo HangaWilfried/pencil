@@ -14,36 +14,49 @@ datasource db {
 }
 
 model Feedback {
-  id  String  @id @default(uuid())
-  star Int
-  message String
-  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String
-  post  Post  @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId String
+  id        String   @id @default(uuid())
+  star      Int
+  message   String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    String
   createdAt DateTime @default(now()) @db.Timestamp(3)
 }
 
 model Post {
-  id  String  @id @default(uuid())
-  title String
-  content String
-  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String
+  id        String     @id @default(uuid())
+  title     String
+  content   String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
   feedbacks Feedback[]
-  status Status @default(DRAFT)
+  likes     Like[]
+  status    Status     @default(DRAFT)
+  createdAt DateTime   @default(now()) @db.Timestamp(3)
+}
+
+model Like {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    String
   createdAt DateTime @default(now()) @db.Timestamp(3)
+
+  @@unique([userId, postId])
 }
 
 model User {
-  id  String  @id @default(uuid())
+  id        String     @id @default(uuid())
   lastname  String
   firstname String
-  email String @unique
-  password String
-  posts Post[]
+  email     String     @unique
+  password  String
+  posts     Post[]
   feedbacks Feedback[]
-  createdAt DateTime @default(now()) @db.Timestamp(3)
+  likes     Like[]
+  createdAt DateTime   @default(now()) @db.Timestamp(3)
 }
 
 enum Status {
