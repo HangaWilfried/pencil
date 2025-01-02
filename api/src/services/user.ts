@@ -61,7 +61,7 @@ export async function register(req: Request, res: Response) {
         password,
       },
     });
-    res.status(204);
+    res.status(201).json({ message: "User created successfully" });
   } catch (error) {
     handleError(error, res);
   }

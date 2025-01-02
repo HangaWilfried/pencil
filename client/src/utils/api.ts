@@ -121,6 +121,39 @@ export function useClientApi() {
         return this.handleError(error);
       }
     },
+    async draftPost(postId: string): Promise<RequestResponse> {
+      try {
+        await fetch(`${baseUrl}/post/${postId}/draft`, {
+          method: "PUT",
+          headers: getHeader()
+        });
+        return {};
+      } catch (error) {
+        return this.handleError(error);
+      }
+    },
+    async publishPost(postId: string): Promise<RequestResponse> {
+      try {
+        await fetch(`${baseUrl}/post/${postId}/publish`, {
+          method: "PUT",
+          headers: getHeader()
+        });
+        return {};
+      } catch (error) {
+        return this.handleError(error);
+      }
+    },
+    async deletePost(postId: string): Promise<RequestResponse> {
+      try {
+        await fetch(`${baseUrl}/post/${postId}`, {
+          method: "DELETE",
+          headers: getHeader()
+        });
+        return {};
+      } catch (error) {
+        return this.handleError(error);
+      }
+    },
     async getPostById(postId: string): Promise<RequestResponse<PostDTO>> {
       try {
         const response = await fetch(`${baseUrl}/post/${postId}`, {

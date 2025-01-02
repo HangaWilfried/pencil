@@ -4,11 +4,15 @@ import bodyParser from "body-parser";
 
 import {
   editPost,
+  draftPost,
   createPost,
   deletePost,
+  publishPost,
   getAllPosts,
   getPostById,
   getUserPosts,
+  upsertFeedback,
+  getFeedbacksByPostId,
 } from "./services/post";
 import { getUserById, login, register } from "./services/user";
 
@@ -40,6 +44,20 @@ app
   .get(getPostById)
   .put(passport.authenticate("jwt", { session: false }), editPost)
   .delete(passport.authenticate("jwt", { session: false }), deletePost);
+
+
+app
+    .route("/api/post/:id/feedback")
+    .get(getFeedbacksByPostId)
+    .post(passport.authenticate("jwt", { session: false }), upsertFeedback);
+
+app
+  .route("/api/post/:id/draft")
+  .put(passport.authenticate("jwt", { session: false }), draftPost);
+
+app
+  .route("/api/post/:id/publish")
+  .put(passport.authenticate("jwt", { session: false }), publishPost);
 
 app
   .route("/api/user/:userId/posts")

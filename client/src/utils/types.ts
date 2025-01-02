@@ -33,8 +33,9 @@ export type UserDTO = {
 export type PostDTO = {
   id: string;
   title: string;
-  content: string;
   userId: string;
+  status: string;
+  content: string;
   createdAt: string;
 };
 
