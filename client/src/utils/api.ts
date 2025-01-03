@@ -125,7 +125,7 @@ export function useClientApi() {
       try {
         await fetch(`${baseUrl}/post/${postId}/draft`, {
           method: "PUT",
-          headers: getHeader()
+          headers: getHeader(),
         });
         return {};
       } catch (error) {
@@ -136,7 +136,7 @@ export function useClientApi() {
       try {
         await fetch(`${baseUrl}/post/${postId}/publish`, {
           method: "PUT",
-          headers: getHeader()
+          headers: getHeader(),
         });
         return {};
       } catch (error) {
@@ -147,7 +147,7 @@ export function useClientApi() {
       try {
         await fetch(`${baseUrl}/post/${postId}`, {
           method: "DELETE",
-          headers: getHeader()
+          headers: getHeader(),
         });
         return {};
       } catch (error) {

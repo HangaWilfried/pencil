@@ -49,14 +49,23 @@ app
   .delete(passport.authenticate("jwt", { session: false }), deletePost);
 
 app
-    .route("/api/post/:id/like")
-    .put([passport.authenticate("jwt", { session: false }), extractTokenInfo], likePost)
-    .delete([passport.authenticate("jwt", { session: false }), extractTokenInfo], dislikePost);
+  .route("/api/post/:id/like")
+  .put(
+    [passport.authenticate("jwt", { session: false }), extractTokenInfo],
+    likePost,
+  )
+  .delete(
+    [passport.authenticate("jwt", { session: false }), extractTokenInfo],
+    dislikePost,
+  );
 
 app
-    .route("/api/post/:id/feedback")
-    .get(getFeedbacksByPostId)
-    .post([passport.authenticate("jwt", { session: false }), extractTokenInfo], upsertFeedback);
+  .route("/api/post/:id/feedback")
+  .get(getFeedbacksByPostId)
+  .post(
+    [passport.authenticate("jwt", { session: false }), extractTokenInfo],
+    upsertFeedback,
+  );
 
 app
   .route("/api/post/:id/draft")
@@ -68,7 +77,10 @@ app
 
 app
   .route("/api/my-posts")
-  .get([passport.authenticate("jwt", { session: false }), extractTokenInfo], getUserPosts);
+  .get(
+    [passport.authenticate("jwt", { session: false }), extractTokenInfo],
+    getUserPosts,
+  );
 
 app.route("/api/user/:id").get(getUserById);
 app.route("/api/auth/login").post(login);

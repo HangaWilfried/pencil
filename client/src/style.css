@@ -3,8 +3,7 @@
 @tailwind utilities;
 
 @layer base {
-    button {
-        @apply border rounded-lg p-4 text-sm leading-tight focus:ring-2
-            outline-none focus:outline-none;
-    }
+  button {
+    @apply rounded-lg border p-4 text-sm leading-tight outline-none focus:outline-none focus:ring-2;
+  }
 }

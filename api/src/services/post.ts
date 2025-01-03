@@ -114,8 +114,8 @@ export async function publishPost(req: Request, res: Response) {
     }
     await prisma.post.update({
       where: { id: req.params.id },
-      data: { status: "PUBLISH" }
-    })
+      data: { status: "PUBLISH" },
+    });
     res.status(201);
   } catch (error) {
     handleError(error, res);
@@ -133,8 +133,8 @@ export async function draftPost(req: Request, res: Response) {
     }
     await prisma.post.update({
       where: { id: req.params.id },
-      data: { status: "DRAFT" }
-    })
+      data: { status: "DRAFT" },
+    });
     res.status(201);
   } catch (error) {
     handleError(error, res);
@@ -160,7 +160,7 @@ export async function upsertFeedback(req: Request, res: Response) {
       res.status(404).json({ message: "Post not found" });
       return;
     }
-    if(feedback.id) {
+    if (feedback.id) {
       await prisma.feedback.update({
         where: { id: feedback.id },
         data: {
@@ -168,7 +168,7 @@ export async function upsertFeedback(req: Request, res: Response) {
           postId,
           star: feedback.star,
           message: feedback.message,
-        }
+        },
       });
       res.status(201).json({ message: "feedback updated" });
     } else {
@@ -178,7 +178,7 @@ export async function upsertFeedback(req: Request, res: Response) {
           postId,
           star: feedback.star,
           message: feedback.message,
-        }
+        },
       });
       res.status(201).json({ message: "feedback created" });
     }
@@ -199,7 +199,7 @@ export async function getFeedbacksByPostId(req: Request, res: Response) {
       return;
     }
     const feedbacks = await prisma.feedback.findMany({
-      where: { postId }
+      where: { postId },
     });
     res.status(200).json(feedbacks);
   } catch (error) {
@@ -208,26 +208,28 @@ export async function getFeedbacksByPostId(req: Request, res: Response) {
 }
 
 export async function getPostRate(postId: string): Promise<number> {
-  const totalFeedbacks: Array<{count: number; star: number}> = [];
-  await Promise.all([1, 2, 3, 4, 5].map(async (star: number) => {
-    const count = await prisma.feedback.count({
-      where: {
-        postId,
-        star
-      },
-    });
-    totalFeedbacks.push({ star, count });
-  }));
+  const totalFeedbacks: Array<{ count: number; star: number }> = [];
+  await Promise.all(
+    [1, 2, 3, 4, 5].map(async (star: number) => {
+      const count = await prisma.feedback.count({
+        where: {
+          postId,
+          star,
+        },
+      });
+      totalFeedbacks.push({ star, count });
+    }),
+  );
 
   const numerator = totalFeedbacks.reduce((acc, curr) => {
-    return acc + (curr.count * curr.star);
+    return acc + curr.count * curr.star;
   }, 0);
 
   const denominator = totalFeedbacks.reduce((acc, curr) => {
     return acc + curr.count;
   }, 0);
 
-  return numerator/denominator;
+  return numerator / denominator;
 }
 
 export async function likePost(req: Request, res: Response) {
@@ -248,9 +250,8 @@ export async function likePost(req: Request, res: Response) {
       data: {
         userId,
         postId,
-      }
-    })
-
+      },
+    });
   } catch (error) {
     handleError(error, res);
   }
@@ -271,7 +272,7 @@ export async function dislikePost(req: Request, res: Response) {
     }
     await prisma.like.deleteMany({
       where: { userId, postId },
-    })
+    });
   } catch (error) {
     handleError(error, res);
   }
