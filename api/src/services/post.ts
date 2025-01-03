@@ -7,7 +7,15 @@ import { Request, Response } from "express";
 
 export async function getAllPosts(req: Request, res: Response) {
   try {
-    const posts = await prisma.post.findMany();
+    const list = await prisma.post.findMany();
+    const posts = await Promise.all(list.map(async post => {
+      const likes = await countLikesByPost(post.id);
+      return {
+        ...post,
+        likes,
+      }
+    }));
+
     res.status(200).json(posts);
   } catch (error) {
     handleError(error, res);
@@ -19,10 +27,16 @@ export async function createPost(req: Request, res: Response) {
     const schema = joi.object({
       title: joi.string().required(),
       content: joi.string().required(),
-      userId: joi.string().required(),
     });
     const newPost = await schema.validateAsync(req.body);
-    const postEntity = await prisma.post.create({ data: newPost });
+    const userId = (req.user as User).id;
+
+    const postEntity = await prisma.post.create({ 
+      data: {
+        ...newPost,
+        userId
+      } 
+    });
     res.status(201).send(postEntity.id);
   } catch (error) {
     handleError(error, res);
@@ -66,7 +80,7 @@ export async function editPost(req: Request, res: Response) {
       where: { id: postId },
       data: newPostData,
     });
-    res.status(204);
+    res.status(204).end();
   } catch (error) {
     handleError(error, res);
   }
@@ -82,7 +96,7 @@ export async function deletePost(req: Request, res: Response) {
     await prisma.post.delete({
       where: { id: post.id },
     });
-    res.status(200);
+    res.status(200).end();
   } catch (error) {
     handleError(error, res);
   }
@@ -116,7 +130,7 @@ export async function publishPost(req: Request, res: Response) {
       where: { id: req.params.id },
       data: { status: "PUBLISH" },
     });
-    res.status(201);
+    res.status(204).end();
   } catch (error) {
     handleError(error, res);
   }
@@ -135,7 +149,7 @@ export async function draftPost(req: Request, res: Response) {
       where: { id: req.params.id },
       data: { status: "DRAFT" },
     });
-    res.status(201);
+    res.status(204).end();
   } catch (error) {
     handleError(error, res);
   }
@@ -170,7 +184,7 @@ export async function upsertFeedback(req: Request, res: Response) {
           message: feedback.message,
         },
       });
-      res.status(201).json({ message: "feedback updated" });
+      res.status(204).end();
     } else {
       await prisma.feedback.create({
         data: {
@@ -180,7 +194,7 @@ export async function upsertFeedback(req: Request, res: Response) {
           message: feedback.message,
         },
       });
-      res.status(201).json({ message: "feedback created" });
+      res.status(201).end();
     }
   } catch (error) {
     handleError(error, res);
@@ -252,6 +266,7 @@ export async function likePost(req: Request, res: Response) {
         postId,
       },
     });
+    res.status(201).end();
   } catch (error) {
     handleError(error, res);
   }
@@ -273,7 +288,16 @@ export async function dislikePost(req: Request, res: Response) {
     await prisma.like.deleteMany({
       where: { userId, postId },
     });
+    res.status(201).end();
   } catch (error) {
     handleError(error, res);
   }
+}
+
+function countLikesByPost(postId: string): Promise<number> {
+  return prisma.like.count({
+    where: {
+      postId,
+    },
+  });
 }

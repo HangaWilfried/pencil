@@ -40,7 +40,10 @@ app.use(
 app
   .route("/api/post")
   .get(getAllPosts)
-  .post(passport.authenticate("jwt", { session: false }), createPost);
+  .post(
+    [passport.authenticate("jwt", { session: false }), extractTokenInfo], 
+    createPost
+  );
 
 app
   .route("/api/post/:id")
