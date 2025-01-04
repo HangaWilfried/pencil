@@ -1,10 +1,10 @@
 import jwt from "jsonwebtoken";
-
-import { prisma } from "./orm";
-import { SECRET } from "./secret";
 import type { User } from "@prisma/client";
 import type { NextFunction, Request, Response } from "express";
 import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt";
+
+import { prisma } from "@/utils/orm";
+import { SECRET } from "@/utils/secret";
 
 export const STRATEGY = new JwtStrategy(
   {

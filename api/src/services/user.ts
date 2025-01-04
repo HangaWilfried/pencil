@@ -1,10 +1,10 @@
 import joi from "joi";
 import argon from "argon2";
-import { prisma } from "./orm";
-import { generateJWT } from "./jwt";
-import { handleError } from "./types";
-
 import { Request, Response } from "express";
+
+import { prisma } from "@/utils/orm";
+import { generateJWT } from "@/utils/jwt";
+import { handleError } from "@/utils/types";
 
 export async function login(req: Request, res: Response) {
   const schema = joi.object({

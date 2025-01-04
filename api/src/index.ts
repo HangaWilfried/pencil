@@ -14,14 +14,14 @@ import {
   publishPost,
   getUserPosts,
   upsertFeedback,
+  getLikesByPostId,
   getFeedbacksByPostId,
-} from "./services/post";
+} from "@/services/post";
+import { getUserById, login, register } from "@/services/user";
 
 import passport from "passport";
-import { prisma } from "./services/orm";
-
-import { extractTokenInfo, STRATEGY } from "./services/jwt";
-import { getUserById, login, register } from "./services/user";
+import { prisma } from "@/utils/orm";
+import { extractTokenInfo, STRATEGY } from "@/utils/jwt";
 
 const PORT = 4500;
 const app = express();
@@ -53,6 +53,7 @@ app
 
 app
   .route("/api/post/:id/like")
+  .get(getLikesByPostId)
   .put(
     [passport.authenticate("jwt", { session: false }), extractTokenInfo],
     likePost,

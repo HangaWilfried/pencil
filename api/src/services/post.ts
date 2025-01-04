@@ -1,6 +1,6 @@
 import joi from "joi";
-import { prisma } from "./orm";
-import { handleError } from "./types";
+import { prisma } from "@/utils/orm";
+import { handleError } from "@/utils/types";
 
 import { User } from "@prisma/client";
 import { Request, Response } from "express";
@@ -9,10 +9,11 @@ export async function getAllPosts(req: Request, res: Response) {
   try {
     const list = await prisma.post.findMany();
     const posts = await Promise.all(list.map(async post => {
-      const likes = await countLikesByPost(post.id);
+      const [likes, feedbacks] = await Promise.all([countLikesByPost(post.id), countFeedbacksByPost(post.id)]);
       return {
         ...post,
         likes,
+        feedbacks,
       }
     }));
 
@@ -294,10 +295,38 @@ export async function dislikePost(req: Request, res: Response) {
   }
 }
 
+export async function getLikesByPostId(req: Request, res: Response) {
+  try {
+    const postId = req.params.id;
+
+    const post = await prisma.post.findFirst({
+      where: { id: postId },
+    });
+
+    if (!post) {
+      res.status(404).json({ message: "Post not found" });
+      return;
+    }
+    const likes = await prisma.like.findMany({
+      where: { postId },
+    });
+    res.status(200).json(likes.map((like) => like.userId));
+  } catch (error) {
+    handleError(error, res);
+  }
+}
+
+
 function countLikesByPost(postId: string): Promise<number> {
   return prisma.like.count({
     where: {
       postId,
     },
   });
+}
+
+function countFeedbacksByPost(postId: string): Promise<number> {
+  return prisma.feedback.count({
+    where: { postId }
+  })
 }
