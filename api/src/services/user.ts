@@ -2,9 +2,9 @@ import joi from "joi";
 import argon from "argon2";
 import { Request, Response } from "express";
 
-import { prisma } from "@/utils/orm";
-import { generateJWT } from "@/utils/jwt";
-import { handleError } from "@/utils/types";
+import { prisma } from "../utils/orm";
+import { generateJWT } from "../utils/jwt";
+import { handleError } from "../utils/types";
 
 export async function login(req: Request, res: Response) {
   const schema = joi.object({
@@ -62,6 +62,24 @@ export async function register(req: Request, res: Response) {
       },
     });
     res.status(201).json({ message: "User created successfully" });
+  } catch (error) {
+    handleError(error, res);
+  }
+}
+
+export async function getAllUsers(req: Request, res: Response) {
+  try {
+    const users = await prisma.user.findMany();
+    res.status(200).json(
+      users.map((user) => {
+        return {
+          firstname: user.firstname,
+          lastname: user.lastname,
+          email: user.email,
+          id: user.id,
+        };
+      }),
+    );
   } catch (error) {
     handleError(error, res);
   }

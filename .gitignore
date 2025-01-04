@@ -4,5 +4,7 @@ api/node_modules
 api/.env
 client/.env
 
+api/media
+
 .idea
 .vscode

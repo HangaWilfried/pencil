@@ -1,27 +1,37 @@
 import cors from "cors";
 import express from "express";
+import passport from "passport";
 import bodyParser from "body-parser";
 
+import { extractTokenInfo, STRATEGY } from "./utils/jwt";
+import { upload } from "./utils/upload";
+import { prisma } from "./utils/orm";
+
 import {
+  getFeedbacksByPostId,
+  getLikesByPostId,
+  editFeedback,
+  getUserPosts,
+  addFeedback,
+  getAllPosts,
+  publishPost,
+  getPostById,
+  dislikePost,
+  deletePost,
+  createPost,
+  draftPost,
   editPost,
   likePost,
-  draftPost,
-  createPost,
-  deletePost,
-  dislikePost,
-  getAllPosts,
-  getPostById,
-  publishPost,
-  getUserPosts,
-  upsertFeedback,
-  getLikesByPostId,
-  getFeedbacksByPostId,
-} from "@/services/post";
-import { getUserById, login, register } from "@/services/user";
-
-import passport from "passport";
-import { prisma } from "@/utils/orm";
-import { extractTokenInfo, STRATEGY } from "@/utils/jwt";
+} from "./services/post";
+import { createNewFile, deleteFileById, getFileById } from "./services/media";
+import { getAllUsers, getUserById, login, register } from "./services/user";
+import {
+  createNewTag,
+  deleteTag,
+  editTag,
+  getAllTags,
+  getTagById,
+} from "./services/tag";
 
 const PORT = 4500;
 const app = express();
@@ -38,17 +48,40 @@ app.use(
 );
 
 app
+  .route("/api/tag")
+  .get(passport.authenticate("jwt", { session: false }), getAllTags)
+  .post(
+    [passport.authenticate("jwt", { session: false }), extractTokenInfo],
+    createNewTag,
+  );
+
+app
+  .route("/api/tag/:id")
+  .put(
+    [passport.authenticate("jwt", { session: false }), extractTokenInfo],
+    editTag,
+  )
+  .get(passport.authenticate("jwt", { session: false }), getTagById)
+  .delete(
+    [passport.authenticate("jwt", { session: false }), extractTokenInfo],
+    deleteTag,
+  );
+
+app
   .route("/api/post")
   .get(getAllPosts)
   .post(
-    [passport.authenticate("jwt", { session: false }), extractTokenInfo], 
-    createPost
+    [passport.authenticate("jwt", { session: false }), extractTokenInfo],
+    createPost,
   );
 
 app
   .route("/api/post/:id")
   .get(getPostById)
-  .put(passport.authenticate("jwt", { session: false }), editPost)
+  .put(
+    [passport.authenticate("jwt", { session: false }), extractTokenInfo],
+    editPost,
+  )
   .delete(passport.authenticate("jwt", { session: false }), deletePost);
 
 app
@@ -68,7 +101,11 @@ app
   .get(getFeedbacksByPostId)
   .post(
     [passport.authenticate("jwt", { session: false }), extractTokenInfo],
-    upsertFeedback,
+    addFeedback,
+  )
+  .put(
+    [passport.authenticate("jwt", { session: false }), extractTokenInfo],
+    editFeedback,
   );
 
 app
@@ -86,9 +123,26 @@ app
     getUserPosts,
   );
 
+app
+  .route("/api/user")
+  .get(passport.authenticate("jwt", { session: false }), getAllUsers);
 app.route("/api/user/:id").get(getUserById);
+
 app.route("/api/auth/login").post(login);
 app.route("/api/auth/register").post(register);
+
+app
+  .route("/api/media")
+  .post(
+    passport.authenticate("jwt", { session: false }),
+    upload.single("file"),
+    createNewFile,
+  );
+
+app
+  .route("/api/media/:id")
+  .get(getFileById)
+  .delete(passport.authenticate("jwt", { session: false }), deleteFileById);
 
 app.listen(PORT, async () => {
   try {
