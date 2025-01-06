@@ -31,11 +31,15 @@ export type UserDTO = {
 };
 
 export type PostDTO = {
-  id: string;
-  title: string;
-  userId: string;
+  likes: number
+  feedbacks: number
+  id: string
+  title: string
+  content: string
+  userId: string
+  medias: string[]
+  tags: string[]
   status: string;
-  content: string;
   createdAt: string;
 };
 
@@ -49,4 +53,12 @@ export type UpdatePostDTO = {
   title: string;
   content: string;
   id: string;
+};
+
+export type TagDTO = {
+  id: string;
+  createdAt: string;
+  name: string;
+  userId: string;
+  description: string;
 };

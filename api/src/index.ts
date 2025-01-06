@@ -21,7 +21,7 @@ import {
   createPost,
   draftPost,
   editPost,
-  likePost,
+  likePost, getPostsByTag,
 } from "./services/post";
 import { createNewFile, deleteFileById, getFileById } from "./services/media";
 import { getAllUsers, getUserById, login, register } from "./services/user";
@@ -74,6 +74,10 @@ app
     [passport.authenticate("jwt", { session: false }), extractTokenInfo],
     createPost,
   );
+
+app
+    .route("/api/:tag/post")
+    .get(getPostsByTag)
 
 app
   .route("/api/post/:id")

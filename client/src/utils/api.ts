@@ -1,14 +1,15 @@
 import dayjs from "dayjs";
 import { jwtDecode } from "jwt-decode";
 import type {
+  TagDTO,
   PostDTO,
   UserDTO,
   LoginDTO,
   JwtPayload,
   RegisterDTO,
+  UpdatePostDTO,
   RegisterPostDTO,
   RequestResponse,
-  UpdatePostDTO,
 } from "@/utils/types.ts";
 
 export function useToken() {
@@ -178,6 +179,18 @@ export function useClientApi() {
         return this.handleError(error);
       }
     },
+    async getPostsByTag(tag: string): Promise<RequestResponse<PostDTO[]>> {
+      try {
+        const response = await fetch(`${baseUrl}/${tag}/post`, {
+          method: "GET",
+          headers: getHeader(),
+        });
+        const posts = await response.json();
+        return { data: posts };
+      } catch (error) {
+        return this.handleError(error);
+      }
+    },
     async getUserPosts(userId: string): Promise<RequestResponse<PostDTO[]>> {
       try {
         const response = await fetch(`${baseUrl}/user/${userId}/posts`, {
@@ -186,6 +199,31 @@ export function useClientApi() {
         });
         const posts = await response.json();
         return { data: posts };
+      } catch (error) {
+        return this.handleError(error);
+      }
+    },
+    async getAllTags(): Promise<RequestResponse<TagDTO[]>> {
+      try {
+        const response = await fetch(`${baseUrl}/tag`, {
+          method: "GET",
+          headers: getHeader(),
+        });
+        const tags = await response.json();
+        return { data: tags };
+      } catch (error) {
+        return this.handleError(error);
+      }
+    },
+
+    async getFileById(fileId: string): Promise<RequestResponse<string>> {
+      try {
+        const response = await fetch(`${baseUrl}/media/${fileId}`, {
+          method: "GET",
+          headers: getHeader(),
+        });
+        const file = await response.clone().blob();
+        return { data: URL.createObjectURL(file) };
       } catch (error) {
         return this.handleError(error);
       }

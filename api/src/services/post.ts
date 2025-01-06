@@ -28,6 +28,35 @@ export async function getAllPosts(req: Request, res: Response) {
   }
 }
 
+export async function getPostsByTag(req: Request, res: Response) {
+  try {
+    const list = await prisma.post.findMany({
+      where: {
+        tags: {
+         has: req.params.tag,
+        }
+      }
+    });
+    const posts = await Promise.all(
+        list.map(async (post) => {
+          const [likes, feedbacks] = await Promise.all([
+            countLikesByPost(post.id),
+            countFeedbacksByPost(post.id),
+          ]);
+          return {
+            ...post,
+            likes,
+            feedbacks,
+          };
+        }),
+    );
+
+    res.status(200).json(posts);
+  } catch (error) {
+    handleError(error, res);
+  }
+}
+
 export async function createPost(req: Request, res: Response) {
   try {
     const schema = joi.object({
