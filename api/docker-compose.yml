@@ -1,9 +1,10 @@
 services:
   db:
     image: postgres:latest
+    container_name: blog
     restart: always
     volumes:
-      - /home/smile/tmp:/var/lib/postgresql/data
+      - ${HOME}/tmp:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     environment:
