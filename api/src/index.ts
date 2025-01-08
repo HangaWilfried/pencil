@@ -3,9 +3,9 @@ import express from "express";
 import passport from "passport";
 import bodyParser from "body-parser";
 
-import { extractTokenInfo, STRATEGY } from "./utils/jwt";
-import { upload } from "./utils/upload";
 import { prisma } from "./utils/orm";
+import { extractTokenInfo, STRATEGY } from "./utils/jwt";
+import { createTmpFolder, upload } from "./utils/upload";
 
 import {
   getFeedbacksByPostId,
@@ -151,6 +151,7 @@ app
 app.listen(PORT, async () => {
   try {
     await prisma.$connect();
+    createTmpFolder();
     console.log(`✅ Server started at http://localhost:${PORT}`);
   } catch (error) {
     console.error("❌ Failed to connect to the database:", error);

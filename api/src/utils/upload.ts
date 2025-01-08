@@ -1,11 +1,26 @@
-import multer from "multer";
+import { 
+  createReadStream, 
+  unlinkSync, 
+  existsSync, 
+  mkdirSync 
+} from "node:fs";
 import { join } from "path";
-import { createReadStream, unlinkSync } from "node:fs";
+import multer from "multer";
 
 export const deleteFile = (source?: string) => {
   if (!source) return;
   const file = join(process.cwd(), source);
   unlinkSync(file);
+};
+
+export const createTmpFolder = () => {
+  const folderName = process.cwd() + '/media/blobs';
+  try {
+    if(existsSync(folderName)) console.log(folderName + " already exists");
+    else mkdirSync(folderName);
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 export const loadFile = (source: string) => {
