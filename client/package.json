@@ -6,9 +6,10 @@
   "scripts": {
     "dev": "vite",
     "preview": "vite preview",
+    "format": "prettier --write .",
     "build": "vue-tsc -b && vite build",
-    "lint": "eslint 'src/**/*.{js,vue}'",
-    "format": "prettier --write ."
+    "eslint": "eslint 'src/**/*.{js,vue}'",
+    "stylelint": "npx stylelint \"**/*.css\""
   },
   "dependencies": {
     "@headlessui/vue": "^1.7.23",
@@ -33,6 +34,10 @@
     "postcss": "^8.4.49",
     "prettier": "3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.9",
+    "stylelint": "^16.12.0",
+    "stylelint-config-html": "^1.1.0",
+    "stylelint-config-recommended-vue": "^1.5.0",
+    "stylelint-config-standard": "^36.0.1",
     "tailwindcss": "^3.4.17",
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.18.2",

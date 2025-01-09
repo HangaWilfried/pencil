@@ -19,7 +19,10 @@ export function useToken() {
     },
     decode(): JwtPayload {
       const token = this.getToken();
-      return jwtDecode<JwtPayload>(token!);
+      if (token) {
+        return jwtDecode<JwtPayload>(token!);
+      }
+      return {} as JwtPayload;
     },
     isLoggedIn(): boolean {
       const token = this.getToken();

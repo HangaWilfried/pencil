@@ -1,31 +1,20 @@
 import js from "@eslint/js";
-import eslintPluginVue from "eslint-plugin-vue";
 import ts from "typescript-eslint";
+import eslintPluginVue from "eslint-plugin-vue";
+import eslintConfigPrettier from "eslint-config-prettier";
 
 export default ts.config(
   js.configs.recommended,
   ...ts.configs.recommended,
   ...eslintPluginVue.configs["flat/recommended"],
   {
-    files: ["*.vue", "**/*.vue"],
+    files: ["**/*.{ts,vue}"],
     languageOptions: {
       parserOptions: {
         parser: "@typescript-eslint/parser",
       },
     },
-    rules: {
-      "vue/html-self-closing": [
-        "error",
-        {
-          html: {
-            void: "always",
-            normal: "never",
-            component: "always",
-          },
-          svg: "always",
-          math: "always",
-        },
-      ],
-    },
+    rules: {},
   },
+  eslintConfigPrettier,
 );

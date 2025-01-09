@@ -49,7 +49,7 @@ app.use(
 
 app
   .route("/api/tag")
-  .get(passport.authenticate("jwt", { session: false }), getAllTags)
+  .get(getAllTags)
   .post(
     [passport.authenticate("jwt", { session: false }), extractTokenInfo],
     createNewTag,

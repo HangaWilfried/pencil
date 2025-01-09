@@ -31,14 +31,14 @@ export type UserDTO = {
 };
 
 export type PostDTO = {
-  likes: number
-  feedbacks: number
-  id: string
-  title: string
-  content: string
-  userId: string
-  medias: string[]
-  tags: string[]
+  likes: number;
+  feedbacks: number;
+  id: string;
+  title: string;
+  content: string;
+  userId: string;
+  medias: string[];
+  tags: string[];
   status: string;
   createdAt: string;
 };

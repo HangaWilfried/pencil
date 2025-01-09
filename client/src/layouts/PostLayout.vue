@@ -35,11 +35,9 @@
         </RouterLink>
       </div>
     </header>
-    <div class="p-10">
-      <RouterView v-slot="{ Component }">
-        <component :is="Component" :query="queryText" />
-      </RouterView>
-    </div>
+    <RouterView v-slot="{ Component }">
+      <component :is="Component" :query="queryText" />
+    </RouterView>
   </div>
 </template>
 
