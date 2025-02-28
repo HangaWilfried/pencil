@@ -23,8 +23,10 @@ import {
   editPost,
   likePost, getPostsByTag,
 } from "./services/post";
-import { createNewFile, deleteFileById, getFileById } from "./services/media";
+
 import { getAllUsers, getUserById, login, register } from "./services/user";
+import { createNewFile, deleteFileById, getFileById } from "./services/media";
+
 import {
   createNewTag,
   deleteTag,
@@ -32,6 +34,16 @@ import {
   getAllTags,
   getTagById,
 } from "./services/tag";
+import { ExceptionErrorHandler } from "./utils/errors";
+import {
+  addFeedbackSchema,
+  editFeedbackSchema,
+  LoginSchema,
+  postSchema,
+  RegisterSchema, tagSchema,
+  validateSchema
+} from "./utils/validations";
+import { asyncHandler } from "./utils/response";
 
 const PORT = 4500;
 const app = express();
@@ -51,14 +63,14 @@ app
   .route("/api/tag")
   .get(getAllTags)
   .post(
-    [passport.authenticate("jwt", { session: false }), extractTokenInfo],
+    [passport.authenticate("jwt", { session: false }), validateSchema(tagSchema), extractTokenInfo],
     createNewTag,
   );
 
 app
   .route("/api/tag/:id")
   .put(
-    [passport.authenticate("jwt", { session: false }), extractTokenInfo],
+    [passport.authenticate("jwt", { session: false }), validateSchema(tagSchema), extractTokenInfo],
     editTag,
   )
   .get(passport.authenticate("jwt", { session: false }), getTagById)
@@ -71,7 +83,7 @@ app
   .route("/api/post")
   .get(getAllPosts)
   .post(
-    [passport.authenticate("jwt", { session: false }), extractTokenInfo],
+    [passport.authenticate("jwt", { session: false }), validateSchema(postSchema), extractTokenInfo],
     createPost,
   );
 
@@ -83,7 +95,7 @@ app
   .route("/api/post/:id")
   .get(getPostById)
   .put(
-    [passport.authenticate("jwt", { session: false }), extractTokenInfo],
+    [passport.authenticate("jwt", { session: false }), validateSchema(postSchema), extractTokenInfo],
     editPost,
   )
   .delete(passport.authenticate("jwt", { session: false }), deletePost);
@@ -104,11 +116,11 @@ app
   .route("/api/post/:id/feedback")
   .get(getFeedbacksByPostId)
   .post(
-    [passport.authenticate("jwt", { session: false }), extractTokenInfo],
+    [passport.authenticate("jwt", { session: false }), validateSchema(addFeedbackSchema), extractTokenInfo],
     addFeedback,
   )
   .put(
-    [passport.authenticate("jwt", { session: false }), extractTokenInfo],
+    [passport.authenticate("jwt", { session: false }), validateSchema(editFeedbackSchema), extractTokenInfo],
     editFeedback,
   );
 
@@ -129,11 +141,13 @@ app
 
 app
   .route("/api/user")
-  .get(passport.authenticate("jwt", { session: false }), getAllUsers);
-app.route("/api/user/:id").get(getUserById);
+  .get(passport.authenticate("jwt", { session: false }), asyncHandler(getAllUsers));
 
-app.route("/api/auth/login").post(login);
-app.route("/api/auth/register").post(register);
+app.route("/api/user/:id").get(asyncHandler(getUserById));
+
+app.route("/api/auth/login").post(validateSchema(LoginSchema), asyncHandler(login));
+
+app.route("/api/auth/register").post(validateSchema(RegisterSchema), asyncHandler(register));
 
 app
   .route("/api/media")
@@ -147,6 +161,8 @@ app
   .route("/api/media/:id")
   .get(getFileById)
   .delete(passport.authenticate("jwt", { session: false }), deleteFileById);
+
+app.use(ExceptionErrorHandler);
 
 app.listen(PORT, async () => {
   try {

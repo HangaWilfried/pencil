@@ -66,21 +66,35 @@ export function useClientApi() {
           headers: getHeader(),
           body: JSON.stringify(credential),
         });
-        const token = await response.text();
-        localStorage.setItem("access-token", token);
-        return {};
+
+        const data = await response.text();
+        console.log(data);
+
+        if(response.ok) {
+          localStorage.setItem("access-token", data);
+          return {};
+        }
+
+        return {
+          error: data
+        };
       } catch (error) {
         return this.handleError(error);
       }
     },
     async createAccount(user: RegisterDTO): Promise<RequestResponse> {
       try {
-        await fetch(`${baseUrl}/auth/register`, {
+        const response = await fetch(`${baseUrl}/auth/register`, {
           method: "POST",
           headers: getHeader(),
           body: JSON.stringify(user),
         });
-        return {};
+
+        if(response.ok) {
+          return {}
+        }
+        const data = await response.text();
+        return { error: data };
       } catch (error) {
         return this.handleError(error);
       }
@@ -104,15 +118,24 @@ export function useClientApi() {
           headers: getHeader(),
           body: JSON.stringify(post),
         });
-        const id = await response.json();
-        return { data: id };
+
+        if(response.ok) {
+          const id = await response.json();
+          return { data: id };
+        }
+
+        const data = await response.text();
+        return {
+          error: data
+        }
+
       } catch (error) {
         return this.handleError(error);
       }
     },
     async editPost(post: UpdatePostDTO): Promise<RequestResponse> {
       try {
-        await fetch(`${baseUrl}/post/${post.id}`, {
+        const response = await fetch(`${baseUrl}/post/${post.id}`, {
           method: "PUT",
           headers: getHeader(),
           body: JSON.stringify({
@@ -120,7 +143,13 @@ export function useClientApi() {
             title: post.title,
           }),
         });
-        return {};
+        if(response.ok) {
+          return {};
+        }
+        const data = await response.text();
+        return {
+          error: data
+        }
       } catch (error) {
         return this.handleError(error);
       }

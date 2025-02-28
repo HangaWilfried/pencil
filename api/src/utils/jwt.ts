@@ -1,10 +1,11 @@
-import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt";
-import type { NextFunction, Request, Response } from "express";
-import type { User } from "@prisma/client";
 import jwt from "jsonwebtoken";
+import type { User } from "@prisma/client";
+import type { NextFunction, Request, Response } from "express";
+import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt";
 
-import { SECRET } from "./secret";
 import { prisma } from "./orm";
+import { SECRET } from "./secret";
+import { UnauthorizedException } from "./errors";
 
 export const STRATEGY = new JwtStrategy(
   {
@@ -38,14 +39,16 @@ export const extractTokenInfo = (
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ message: "Token invalid or not provided" });
+    throw new UnauthorizedException("Token invalid or not provided");
   }
+
   const token = authHeader.split(" ")[1];
+
   try {
     req.user = jwt.verify(token, SECRET);
     next();
   } catch (error) {
     console.error("Error during token validation:", error);
-    return res.status(403).json({ message: "Token invalid or expired." });
+    throw new UnauthorizedException("Token invalid or expired.");
   }
 };

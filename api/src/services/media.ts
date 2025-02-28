@@ -1,9 +1,9 @@
-import { Request, Response } from "express";
 import path from "node:path";
+import { Request, Response } from "express";
 
-import { deleteFile, loadFile } from "../utils/upload";
-import { handleError } from "../utils/types";
 import { prisma } from "../utils/orm";
+import { NotFoundException } from "../utils/errors";
+import { deleteFile, loadFile } from "../utils/upload";
 
 export async function createNewFile(req: Request, res: Response) {
   const file = req.file;
@@ -20,7 +20,7 @@ export async function createNewFile(req: Request, res: Response) {
       res.status(201).json(id);
     } catch (error) {
       deleteFile(file.filename);
-      handleError(error, res);
+      throw error;
     }
   } else {
     res.status(400).json({ message: "Bad request" });
@@ -28,15 +28,12 @@ export async function createNewFile(req: Request, res: Response) {
 }
 
 export async function getFileById(req: Request, res: Response) {
-  try {
-    const fileId = req.params.id;
-    const file = await prisma.media.findFirst({
-      where: { id: fileId },
-    });
-    if (!file) {
-      res.status(404).json({ message: "No file found" });
-      return;
-    }
+  const fileId = req.params.id;
+  const file = await prisma.media.findFirst({
+    where: { id: fileId },
+  });
+
+  if (file) {
     const fileStream = loadFile(file.source);
 
     res.setHeader("Content-Length", file.size);
@@ -44,29 +41,24 @@ export async function getFileById(req: Request, res: Response) {
     res.setHeader("Content-Disposition", `attachment; filename=${file.name}`);
 
     fileStream.pipe(res);
-  } catch (error) {
-    handleError(error, res);
+  } else {
+    throw new NotFoundException("File not found");
   }
 }
 
 export async function deleteFileById(req: Request, res: Response) {
   const fileId = req.params.id;
-  try {
-    const file = await prisma.media.findFirst({
-      where: { id: fileId },
-    });
+  const file = await prisma.media.findFirst({
+    where: { id: fileId },
+  });
 
-    if (!file) {
-      res.status(404).json({ message: "No file found" });
-      return;
-    }
-
+  if (file) {
     await prisma.media.delete({ where: { id: fileId } });
     deleteFile(file.source);
 
     res.status(200).end();
-  } catch (error) {
-    handleError(error, res);
+  } else {
+    throw new NotFoundException("File not found");
   }
 }
 

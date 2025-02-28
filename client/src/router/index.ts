@@ -1,5 +1,5 @@
 import { createWebHistory, createRouter } from "vue-router";
-import PostLayout from "@/layouts/PostLayout.vue";
+import PostLayout from "@/views/layouts/PostLayout.vue";
 
 declare module "vue-router" {
   interface RouteMeta {
@@ -34,7 +34,7 @@ const routes = [
   {
     path: "/auth",
     name: "authentication page",
-    component: () => import("@/layouts/AuthLayout.vue"),
+    component: () => import("@/views/layouts/AuthLayout.vue"),
     children: [
       {
         path: "login",

@@ -4,9 +4,9 @@ services:
     container_name: blog
     restart: always
     volumes:
-      - ${HOME}/tmp:/var/lib/postgresql/data
+      - ${HOME}/Dev/volumes/pencil:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5434:5432"
     environment:
       POSTGRES_PASSWORD: 2000
       POSTGRES_USER: smile

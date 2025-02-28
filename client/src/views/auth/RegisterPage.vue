@@ -40,13 +40,9 @@
         label="Enter your password"
         name="password"
       />
-      <button
-        :disabled="isLoading"
-        type="submit"
-        class="mt-4 bg-blue-500 text-white"
-      >
-        {{ isLoading ? "in progress..." : "Register" }}
-      </button>
+      <ButtonComponent type="submit" class="mt-4 p-4" :isLoading="isLoading">
+        Register
+      </ButtonComponent>
     </form>
     <div class="flex gap-2 text-sm">
       <span>Do you already have account</span>
@@ -61,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 
 import { useVuelidate } from "@vuelidate/core";
@@ -70,6 +66,7 @@ import { required, email } from "@vuelidate/validators";
 import { useClientApi } from "@/utils/api.ts";
 import TextField from "@/components/TextField.vue";
 import IconSuccess from "@/components/icons/IconSuccess.vue";
+import ButtonComponent from '@/components/ButtonComponent.vue'
 
 const api = useClientApi();
 const router = useRouter();
@@ -77,7 +74,9 @@ const router = useRouter();
 const isLoading = ref<boolean>(false);
 const isCreationSucceed = ref<boolean>(false);
 
-const errorMessage = ref<string | unknown>(undefined);
+const $externalResults = reactive({
+  email: ""
+})
 const user = ref({
   email: "",
   password: "",
@@ -99,6 +98,7 @@ const v$ = useVuelidate(
     },
   },
   user,
+  {$externalResults}
 );
 
 const doRegister = async () => {
@@ -109,7 +109,7 @@ const doRegister = async () => {
   const { error } = await api.createAccount(user.value);
   if (error) {
     isLoading.value = false;
-    errorMessage.value = error;
+    $externalResults.email = error;
     return;
   }
   isLoading.value = false;

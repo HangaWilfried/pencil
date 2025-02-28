@@ -29,7 +29,7 @@
           <button v-else class="bg-green-500 text-white" @click="publishPost">
             publish
           </button>
-          <button v-else class="bg-blue-500 text-white" @click="publishPost">
+          <button class="bg-blue-500 text-white" @click="editPost">
             <PencilIcon class="size-4" />
             <span>Edit</span>
           </button>
@@ -82,6 +82,10 @@ async function publishPost() {
   isPublishProcessing.value = true;
   await api.publishPost(props.id);
   isPublishProcessing.value = false;
+}
+
+async function editPost() {
+  console.log("edit post")
 }
 
 async function loadPost() {

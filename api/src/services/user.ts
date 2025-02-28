@@ -1,104 +1,80 @@
-import joi from "joi";
 import argon from "argon2";
 import { Request, Response } from "express";
 
 import { prisma } from "../utils/orm";
 import { generateJWT } from "../utils/jwt";
-import { handleError } from "../utils/types";
+import { ConflictException, NotFoundException } from "../utils/errors";
 
 export async function login(req: Request, res: Response) {
-  const schema = joi.object({
-    email: joi.string().required(),
-    password: joi.string().required(),
+  const userCredential = req.body;
+  const user = await prisma.user.findFirst({
+    where: { email: userCredential.email },
   });
-  try {
-    const userCredential = await schema.validateAsync(req.body);
-    const user = await prisma.user.findFirst({
-      where: { email: userCredential.email },
-    });
-    const message = "email or password are incorrect";
-    if (!user) {
-      res.status(404).json({ message });
-      return;
-    }
-    const isPasswordOk = await argon.verify(
-      user.password,
-      userCredential.password,
-    );
-    if (!isPasswordOk) {
-      res.status(400).json({ message });
-      return;
-    }
 
-    const token = await generateJWT(user);
-    res.status(201).send(token);
-  } catch (error) {
-    handleError(error, res);
+  if (!user) {
+    throw new NotFoundException("email or password is incorrect")
   }
+
+  const isPasswordOk = await argon.verify(
+    user.password,
+    userCredential.password,
+  );
+
+  if (!isPasswordOk) {
+    throw new NotFoundException("email or password is incorrect")
+  }
+
+  const token = await generateJWT(user);
+  res.status(201).send(token);
 }
 
 export async function register(req: Request, res: Response) {
-  const schema = joi.object({
-    firstname: joi.string(),
-    lastname: joi.string().required(),
-    email: joi.string().required(),
-    password: joi.string().required(),
+  const newUser = req.body;
+  const existingUser = await prisma.user.findFirst({
+    where: { email: newUser.email },
+  });
+  if (existingUser) {
+    throw new ConflictException("User already exists");
+  }
+
+  const password = await argon.hash(newUser.password);
+
+  await prisma.user.create({
+    data: {
+      ...newUser,
+      password,
+    },
   });
 
-  try {
-    const newUser = await schema.validateAsync(req.body);
-    const existingUser = await prisma.user.findFirst({
-      where: { email: newUser.email },
-    });
-    if (existingUser) {
-      res.status(409).json({ message: "User already exists" });
-      return;
-    }
-    const password = await argon.hash(newUser.password);
-    await prisma.user.create({
-      data: {
-        ...newUser,
-        password,
-      },
-    });
-    res.status(201).json({ message: "User created successfully" });
-  } catch (error) {
-    handleError(error, res);
-  }
+  res.status(204).end();
 }
 
 export async function getAllUsers(req: Request, res: Response) {
-  try {
-    const users = await prisma.user.findMany();
-    res.status(200).json(
-      users.map((user) => {
-        return {
-          firstname: user.firstname,
-          lastname: user.lastname,
-          email: user.email,
-          id: user.id,
-        };
-      }),
-    );
-  } catch (error) {
-    handleError(error, res);
-  }
+  const users = await prisma.user.findMany();
+
+  res.status(200).json(
+    users.map((user) => {
+      return {
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+        id: user.id,
+      };
+    }),
+  );
 }
 
 export async function getUserById(req: Request, res: Response) {
-  try {
-    const user = await prisma.user.findFirst({ where: { id: req.params.id } });
-    if (!user) {
-      res.status(404).json({ message: "User not found" });
-      return;
-    }
-    res.status(200).json({
-      firstname: user.firstname,
-      lastname: user.lastname,
-      email: user.email,
-      id: user.id,
-    });
-  } catch (error) {
-    handleError(error, res);
+  const user = await prisma.user.findFirst({ where: { id: req.params.id } });
+
+  if (!user) {
+    throw new NotFoundException("User not found");
   }
+
+  res.status(200).json({
+    firstname: user.firstname,
+    lastname: user.lastname,
+    email: user.email,
+    id: user.id,
+  });
 }

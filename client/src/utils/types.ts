@@ -62,3 +62,7 @@ export type TagDTO = {
   userId: string;
   description: string;
 };
+
+export enum Theme {
+  Blue = 'blue',
+}
