@@ -40,13 +40,9 @@
         label="Enter your password"
         name="password"
       />
-      <button
-        :disabled="isLoading"
-        type="submit"
-        class="mt-4 bg-blue-500 text-white"
-      >
-        {{ isLoading ? "in progress..." : "Register" }}
-      </button>
+      <ButtonComponent type="submit" class="mt-4 p-4" :isLoading="isLoading">
+        Register
+      </ButtonComponent>
     </form>
     <div class="flex gap-2 text-sm">
       <span>Do you already have account</span>
@@ -70,6 +66,7 @@ import { required, email } from "@vuelidate/validators";
 import { useClientApi } from "@/utils/api.ts";
 import TextField from "@/components/TextField.vue";
 import IconSuccess from "@/components/icons/IconSuccess.vue";
+import ButtonComponent from '@/components/ButtonComponent.vue'
 
 const api = useClientApi();
 const router = useRouter();

@@ -10,10 +10,12 @@ const props = defineProps<{ tag: TagDTO }>();
 
 const posts = ref<PostDTO[]>([]);
 
-api.getPostsByTag(props.tag.id).then((response) => {
-  console.log("RESPONSE", response);
-  if (response.data) posts.value = response.data;
-});
+api
+  .getPostsByTag(props.tag.id)
+  .then((response) => {
+    console.log("RESPONSE", response);
+    if (response.data) posts.value = response.data;
+  });
 </script>
 
 <template>

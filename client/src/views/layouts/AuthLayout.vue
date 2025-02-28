@@ -1,6 +1,8 @@
 <template>
   <div class="p-10">
-    <LogoComponent />
+    <div class="flex justify-center">
+      <LogoComponent />
+    </div>
     <router-view />
   </div>
 </template>
