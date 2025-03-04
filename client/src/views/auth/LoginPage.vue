@@ -27,13 +27,9 @@
         label="Enter your password"
         name="password"
       />
-      <button
-        :disabled="isLoading"
-        type="submit"
-        class="mt-4 bg-blue-500 text-white"
-      >
-        {{ isLoading ? "checking..." : "Login" }}
-      </button>
+      <ButtonComponent type="submit" class="mt-4 p-4" :isLoading="isLoading">
+        Login
+      </ButtonComponent>
     </form>
     <div class="flex gap-2 text-sm">
       <span>You don't yet have account</span>
@@ -58,6 +54,7 @@ import { useClientApi } from "@/utils/api.ts";
 
 import TextField from "@/components/TextField.vue";
 import IconSuccess from "@/components/icons/IconSuccess.vue";
+import ButtonComponent from '@/components/ButtonComponent.vue'
 
 const api = useClientApi();
 const router = useRouter();
