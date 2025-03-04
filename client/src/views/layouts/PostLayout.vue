@@ -21,11 +21,10 @@
         </template>
         <RouterLink
           v-else
+          data-test="get-started-bouton"
           class="rounded bg-blue-500 px-2 py-1.5 text-white"
           to="/auth/login"
-        >
-          Get started
-        </RouterLink>
+        >Get started</RouterLink>
       </div>
     </header>
     <RouterView />
