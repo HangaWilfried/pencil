@@ -13,8 +13,8 @@ withDefaults(
 </script>
 
 <template>
-  <div class="flex flex-col gap-4 items-center justify-center pt-10">
-    <ImageComponent class="size-[300px]" path="paper.png" />
+  <div class="flex flex-col gap-4 items-center justify-center pt-20">
+    <ImageComponent class="size-[150px]" path="folder.png" />
     <div class="text-sm flex flex-col gap-2 items-center font-bold">
       <span>{{ message }}</span>
       <ButtonComponent v-if="handleAddButtonClicked" class="p-1" @click="handleAddButtonClicked">

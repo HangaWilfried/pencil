@@ -219,6 +219,33 @@ export function useClientApi() {
       }
     },
 
+    async createTag(tag: TagDTO): Promise<RequestResponse<string>> {
+      try {
+        const response = await fetch(`${baseUrl}/tag`, {
+          method: "POST",
+          headers: getHeader(),
+          body: JSON.stringify(tag),
+        });
+        const id = await response.text();
+        return { data: id };
+      } catch (error) {
+        return this.handleError(error);
+      }
+    },
+
+    async editTag(tag: TagDTO): Promise<RequestResponse> {
+      try {
+        await fetch(`${baseUrl}/tag/${tag.id}`, {
+          method: "PUT",
+          headers: getHeader(),
+          body: JSON.stringify(tag),
+        });
+        return {};
+      } catch (error) {
+        return this.handleError(error);
+      }
+    },
+
     async getFileById(fileId: string): Promise<RequestResponse<string>> {
       try {
         const response = await fetch(`${baseUrl}/media/${fileId}`, {

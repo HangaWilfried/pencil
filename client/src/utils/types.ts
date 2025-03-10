@@ -56,11 +56,11 @@ export type UpdatePostDTO = {
 };
 
 export type TagDTO = {
-  id: string;
-  createdAt: string;
-  name: string;
-  userId: string;
-  description: string;
+  id?: string;
+  createdAt?: string;
+  name?: string;
+  userId?: string;
+  description?: string;
 };
 
 export enum Theme {

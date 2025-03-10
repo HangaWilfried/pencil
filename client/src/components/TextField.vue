@@ -4,8 +4,9 @@ import { computed } from "vue";
 
 const model = defineModel<string>();
 const props = defineProps<{
-  label?: string;
   name: string;
+  label?: string;
+  readonly?: boolean;
   placeholder?: string;
   errors?: ErrorObject[];
 }>();
@@ -33,6 +34,7 @@ const formControl = computed<string[]>(() => {
       v-model="model"
       type="text"
       :name="name"
+      :readonly="readonly"
       :class="formControl"
       :placeholder="placeholder"
       :data-test="`input-${name}`"
