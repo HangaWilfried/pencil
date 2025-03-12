@@ -43,11 +43,15 @@ export function useToken() {
   };
 }
 
-const getHeader = () => {
+const getHeader = (hasContentType: boolean = true) => {
   const token = useToken().getToken();
   const headers = new Headers();
-  headers.append("Content-Type", "application/json");
-  if (token) headers.append("Authorization", `Bearer ${token}`);
+  if (hasContentType) {
+    headers.append("Content-Type", "application/json");
+  }
+  if (token) {
+    headers.append("Authorization", `Bearer ${token}`);
+  }
   return headers;
 };
 
@@ -254,6 +258,20 @@ export function useClientApi() {
         });
         const file = await response.clone().blob();
         return { data: URL.createObjectURL(file) };
+      } catch (error) {
+        return this.handleError(error);
+      }
+    },
+
+    async createFile(file: File): Promise<RequestResponse<string>> {
+      try {
+        const response = await fetch(`${baseUrl}/media`, {
+          method: "POST",
+          headers: getHeader(false),
+          body: JSON.stringify(file),
+        });
+        const fileId = await response.text();
+        return { data: fileId };
       } catch (error) {
         return this.handleError(error);
       }

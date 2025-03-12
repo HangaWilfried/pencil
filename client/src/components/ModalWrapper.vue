@@ -41,7 +41,7 @@ defineExpose({
         <DialogPanel transition class="panel">
           <div
             v-if="isClosable"
-            class="absolute right-4 top-4 cursor-pointer"
+            class="absolute top-4 right-4 cursor-pointer"
             @click="closeWhenClosable"
           >
             <XMarkIcon />
@@ -55,6 +55,6 @@ defineExpose({
 
 <style scoped>
 .panel {
-  @apply data-[closed]:transform-[scale(95%)] relative w-full max-w-lg rounded-xl bg-white backdrop-blur-2xl duration-300 ease-out data-[closed]:opacity-0;
+  @apply relative w-full max-w-lg rounded-xl bg-white backdrop-blur-2xl duration-300 ease-out data-[closed]:transform-[scale(95%)] data-[closed]:opacity-0;
 }
 </style>

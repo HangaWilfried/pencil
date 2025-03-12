@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { ref, useId } from 'vue'
+import { ref, useId } from "vue";
 
-import { useVuelidate } from '@vuelidate/core'
-import { required } from '@vuelidate/validators'
-import { PlusCircleIcon } from '@heroicons/vue/24/solid'
+import { useVuelidate } from "@vuelidate/core";
+import { required } from "@vuelidate/validators";
+import { PlusCircleIcon } from "@heroicons/vue/24/solid";
 
-import { useClientApi } from '@/utils/api.ts'
+import { useClientApi } from "@/utils/api.ts";
 
-import TextField from '@/components/TextField.vue'
-import TextAreaField from '@/components/TextAreaField.vue'
-import ButtonComponent from '@/components/ButtonComponent.vue'
+import TextField from "@/components/TextField.vue";
+import TextAreaField from "@/components/TextAreaField.vue";
+import ButtonComponent from "@/components/ButtonComponent.vue";
 
 const id = useId();
 const api = useClientApi();
@@ -33,7 +33,7 @@ const errorMessage = ref<string>("");
 
 const createTag = async (): Promise<void> => {
   const isFormValid = await v$.value.$validate();
-  if(!isFormValid) return;
+  if (!isFormValid) return;
 
   isLoading.value = true;
   const { error } = await api.createTag({
@@ -41,7 +41,7 @@ const createTag = async (): Promise<void> => {
     description: tagForm.value.description,
   });
 
-  if(error) {
+  if (error) {
     errorMessage.value = error;
     isLoading.value = false;
   }
@@ -51,7 +51,7 @@ const createTag = async (): Promise<void> => {
 </script>
 
 <template>
-  <ButtonComponent class="p-1 btn" onclick="id.showModal()">
+  <ButtonComponent class="btn p-1" onclick="id.showModal()">
     <span>Add</span>
     <PlusCircleIcon class="size-5" />
   </ButtonComponent>
@@ -59,24 +59,16 @@ const createTag = async (): Promise<void> => {
     <div class="modal-box">
       <div class="modal-action">
         <form @submit.prevent="createTag" class="flex flex-col gap-3" method="dialog">
-          <span class="text-red-500 text-xs">{{errorMessage}}</span>
-          <TextField
-            name="name"
-            label="Provide a name"
-            v-model="tagForm.name"
-          />
+          <span class="text-xs text-red-500">{{ errorMessage }}</span>
+          <TextField name="name" label="Provide a name" v-model="tagForm.name" />
           <TextAreaField
             v-model="tagForm.description"
             label="Provide description"
             name="description"
           />
-          <div class="py-4 flex gap-2 items-center">
-            <ButtonComponent class="btn" :disabled="isLoading">
-              cancel
-            </ButtonComponent>
-            <ButtonComponent type="submit" :is-loading="isLoading">
-              save
-            </ButtonComponent>
+          <div class="flex items-center gap-2 py-4">
+            <ButtonComponent class="btn" :disabled="isLoading">cancel</ButtonComponent>
+            <ButtonComponent type="submit" :is-loading="isLoading">save</ButtonComponent>
           </div>
         </form>
       </div>

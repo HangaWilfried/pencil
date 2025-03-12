@@ -17,7 +17,7 @@ defineProps<{
       type="text"
       :name="name"
       :readonly="readonly"
-      class="resize-none rounded-md border p-2 outline-none placeholder:text-xs border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-300 focus:outline-none"
+      class="resize-none rounded-md border border-slate-300 p-2 outline-none placeholder:text-xs focus:border-blue-500 focus:ring-2 focus:ring-blue-300 focus:outline-none"
       :placeholder="placeholder"
       :data-test="`input-${name}`"
     />

@@ -1,17 +1,20 @@
 <script setup lang="ts">
-import { Theme } from '@/utils/types.ts'
+import { Theme } from "@/utils/types.ts";
 
-withDefaults(defineProps<{
-  theme?: Theme;
-  isLoading?: boolean;
-}>(), {
-  theme: Theme.Blue,
-  isLoading: false,
-})
+withDefaults(
+  defineProps<{
+    theme?: Theme;
+    isLoading?: boolean;
+  }>(),
+  {
+    theme: Theme.Blue,
+    isLoading: false,
+  },
+);
 
 const classname = {
-  blue: "text-white bg-blue-500 active:ring-1 active:ring-blue-500"
-}
+  blue: "text-white bg-blue-500 active:ring-1 active:ring-blue-500",
+};
 </script>
 
 <template>

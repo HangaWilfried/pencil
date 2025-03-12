@@ -1,6 +1,6 @@
 <template>
   <div>
-    <header class="flex justify-between items-center bg-gray-100 p-4">
+    <header class="flex items-center justify-between bg-gray-100 p-4">
       <div class="pl-8"><LogoComponent /></div>
       <div class="flex items-center gap-2 place-self-end">
         <HeaderMenu :user="user" />
@@ -20,7 +20,7 @@
 <script setup lang="ts">
 import { useToken } from "@/utils/api.ts";
 
-import HeaderMenu from '@/components/HeaderMenu.vue'
+import HeaderMenu from "@/components/HeaderMenu.vue";
 import LogoComponent from "@/components/LogoComponent.vue";
 
 const session = useToken();

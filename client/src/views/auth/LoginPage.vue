@@ -27,16 +27,18 @@
         label="Enter your password"
         name="password"
       />
-      <ButtonComponent data-test="login-button" type="submit" class="mt-4 p-4" :isLoading="isLoading">
+      <ButtonComponent
+        data-test="login-button"
+        type="submit"
+        class="mt-4 p-4"
+        :is-loading="isLoading"
+      >
         Login
       </ButtonComponent>
     </form>
     <div class="flex gap-2 text-sm">
       <span>You don't yet have account</span>
-      <RouterLink
-        to="/auth/register"
-        class="font-bold text-blue-500 underline underline-offset-4"
-      >
+      <RouterLink to="/auth/register" class="font-bold text-blue-500 underline underline-offset-4">
         register
       </RouterLink>
     </div>
@@ -54,7 +56,7 @@ import { useClientApi } from "@/utils/api.ts";
 
 import TextField from "@/components/TextField.vue";
 import IconSuccess from "@/components/icons/IconSuccess.vue";
-import ButtonComponent from '@/components/ButtonComponent.vue'
+import ButtonComponent from "@/components/ButtonComponent.vue";
 
 const api = useClientApi();
 const router = useRouter();

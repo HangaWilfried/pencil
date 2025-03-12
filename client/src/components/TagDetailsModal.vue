@@ -1,22 +1,22 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref } from "vue";
 
-import { useVuelidate } from '@vuelidate/core'
-import { required } from '@vuelidate/validators'
+import { useVuelidate } from "@vuelidate/core";
+import { required } from "@vuelidate/validators";
 
-import type { TagDTO } from '@/utils/types.ts'
-import { useClientApi, useToken } from '@/utils/api.ts'
+import type { TagDTO } from "@/utils/types.ts";
+import { useClientApi, useToken } from "@/utils/api.ts";
 
-import TextField from '@/components/TextField.vue'
-import TextAreaField from '@/components/TextAreaField.vue'
-import ButtonComponent from '@/components/ButtonComponent.vue'
-import IconInfoBulle from '@/components/icons/IconInfoBulle.vue'
+import TextField from "@/components/TextField.vue";
+import TextAreaField from "@/components/TextAreaField.vue";
+import ButtonComponent from "@/components/ButtonComponent.vue";
+import IconInfoBulle from "@/components/icons/IconInfoBulle.vue";
 
 const api = useClientApi();
 
 const props = defineProps<{
-  tag: TagDTO
-}>()
+  tag: TagDTO;
+}>();
 
 const tagForm = ref({
   name: "",
@@ -37,7 +37,7 @@ const errorMessage = ref<string>("");
 
 const editTag = async (): Promise<void> => {
   const isFormValid = await v$.value.$validate();
-  if(!isFormValid) return;
+  if (!isFormValid) return;
 
   isLoading.value = true;
   const { error } = await api.editTag({
@@ -46,7 +46,7 @@ const editTag = async (): Promise<void> => {
     description: tagForm.value.description,
   });
 
-  if(error) {
+  if (error) {
     errorMessage.value = error;
     isLoading.value = false;
   }
@@ -55,7 +55,7 @@ const editTag = async (): Promise<void> => {
 };
 
 const userId = useToken().info().id;
-const isCreatedByMe = computed<boolean>(() => props.tag.userId === userId)
+const isCreatedByMe = computed<boolean>(() => props.tag.userId === userId);
 </script>
 
 <template>
@@ -73,7 +73,7 @@ const isCreatedByMe = computed<boolean>(() => props.tag.userId === userId)
             </div>
             <div class="modal-action">
               <form @submit.prevent="editTag" class="flex flex-col gap-3" method="dialog">
-                <span class="text-red-500 text-xs">{{errorMessage}}</span>
+                <span class="text-xs text-red-500">{{ errorMessage }}</span>
                 <TextField
                   name="name"
                   label="Provide a name"
@@ -86,13 +86,9 @@ const isCreatedByMe = computed<boolean>(() => props.tag.userId === userId)
                   :readonly="!isCreatedByMe"
                   name="description"
                 />
-                <div v-if="isCreatedByMe" class="py-4 flex gap-2 items-center">
-                  <ButtonComponent class="btn" :disabled="isLoading">
-                    cancel
-                  </ButtonComponent>
-                  <ButtonComponent type="submit" :is-loading="isLoading">
-                    save
-                  </ButtonComponent>
+                <div v-if="isCreatedByMe" class="flex items-center gap-2 py-4">
+                  <ButtonComponent class="btn" :disabled="isLoading"> cancel </ButtonComponent>
+                  <ButtonComponent type="submit" :is-loading="isLoading"> save </ButtonComponent>
                 </div>
               </form>
             </div>
@@ -107,7 +103,7 @@ const isCreatedByMe = computed<boolean>(() => props.tag.userId === userId)
             </div>
             <div class="modal-action">
               <form @submit.prevent="editTag" class="flex flex-col gap-3" method="dialog">
-                <span class="text-red-500 text-xs">{{errorMessage}}</span>
+                <span class="text-xs text-red-500">{{ errorMessage }}</span>
                 <TextField
                   name="name"
                   label="Provide a name"
@@ -120,13 +116,9 @@ const isCreatedByMe = computed<boolean>(() => props.tag.userId === userId)
                   :readonly="!isCreatedByMe"
                   name="description"
                 />
-                <div v-if="isCreatedByMe" class="py-4 flex gap-2 items-center">
-                  <ButtonComponent class="btn" :disabled="isLoading">
-                    cancel
-                  </ButtonComponent>
-                  <ButtonComponent type="submit" :is-loading="isLoading">
-                    save
-                  </ButtonComponent>
+                <div v-if="isCreatedByMe" class="flex items-center gap-2 py-4">
+                  <ButtonComponent class="btn" :disabled="isLoading"> cancel </ButtonComponent>
+                  <ButtonComponent type="submit" :is-loading="isLoading"> save </ButtonComponent>
                 </div>
               </form>
             </div>
@@ -135,7 +127,4 @@ const isCreatedByMe = computed<boolean>(() => props.tag.userId === userId)
       </span>
     </td>
   </tr>
-
-
-
 </template>

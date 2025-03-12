@@ -5,8 +5,8 @@
         <h2 class="font-semibold">{{ post.title }}</h2>
         <span class="text-sm">{{ post.content }}</span>
       </div>
-      <div class="size-20 border rounded-lg shrink-0">
-        <img :src="primaryImage" alt="picture" class="rounded-lg size-full object-cover" />
+      <div class="size-20 shrink-0 rounded-lg border">
+        <img :src="primaryImage" alt="picture" class="size-full rounded-lg object-cover" />
       </div>
     </div>
     <div class="flex items-center gap-0.5 text-xs">
@@ -21,7 +21,7 @@ import { onBeforeMount, ref } from "vue";
 
 import { useClientApi } from "@/utils/api.ts";
 import type { PostDTO } from "@/utils/types.ts";
-import { useRelativeTime } from "../utils/method.ts";
+import { useRelativeTime } from "../utils/date.ts";
 
 const api = useClientApi();
 const props = defineProps<{ post: PostDTO }>();

@@ -2,11 +2,13 @@
 @plugin "daisyui";
 
 @layer base {
-  input, button, textarea {
+  input,
+  button,
+  textarea {
     @apply outline-none focus:outline-none;
   }
 
   button {
-    @apply min-w-24 flex justify-center items-center gap-2 rounded-md text-sm leading-tight outline-none focus:outline-none focus:ring-2;
+    @apply flex min-w-24 items-center justify-center gap-2 rounded-md text-sm leading-tight outline-none focus:ring-2 focus:outline-none;
   }
 }

@@ -26,16 +26,12 @@
           >
             draft
           </button>
-          <button v-else class="bg-green-500 text-white" @click="publishPost">
-            publish
-          </button>
+          <button v-else class="bg-green-500 text-white" @click="publishPost">publish</button>
           <button class="bg-blue-500 text-white" @click="editPost">
             <PencilIcon class="size-4" />
             <span>Edit</span>
           </button>
-          <button class="bg-red-500 text-white" @click="deletePost">
-            delete
-          </button>
+          <button class="bg-red-500 text-white" @click="deletePost">delete</button>
         </div>
       </div>
       <div class="rounded-lg bg-white p-4">{{ post.content }}</div>
@@ -48,7 +44,7 @@ import { onBeforeMount, ref } from "vue";
 
 import { useClientApi } from "@/utils/api";
 import type { PostDTO, UserDTO } from "@/utils/types";
-import { useRelativeTime } from "@/utils/method";
+import { useRelativeTime } from "@/utils/date.ts";
 import { PencilIcon } from "@heroicons/vue/20/solid";
 
 const api = useClientApi();
@@ -85,7 +81,7 @@ async function publishPost() {
 }
 
 async function editPost() {
-  console.log("edit post")
+  console.log("edit post");
 }
 
 async function loadPost() {

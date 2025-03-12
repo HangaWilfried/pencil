@@ -13,9 +13,7 @@
     </span>
   </div>
   <div v-else class="m-auto w-[90%] max-w-md space-y-4 pt-10">
-    <span class="text-xl font-bold">
-      Welcome it's a pleasure have you among us.
-    </span>
+    <span class="text-xl font-bold"> Welcome it's a pleasure have you among us. </span>
     <form class="flex flex-col gap-2" @submit.prevent="doRegister">
       <TextField
         v-model="user.lastname"
@@ -23,11 +21,7 @@
         label="Enter your lastname"
         name="lastname"
       />
-      <TextField
-        v-model="user.firstname"
-        label="Enter your firstname"
-        name="firstname"
-      />
+      <TextField v-model="user.firstname" label="Enter your firstname" name="firstname" />
       <TextField
         v-model="user.email"
         :errors="v$.email.$errors"
@@ -40,16 +34,13 @@
         label="Enter your password"
         name="password"
       />
-      <ButtonComponent type="submit" class="mt-4 p-4" :isLoading="isLoading">
+      <ButtonComponent type="submit" class="mt-4 p-4" :is-loading="isLoading">
         Register
       </ButtonComponent>
     </form>
     <div class="flex gap-2 text-sm">
       <span>Do you already have account</span>
-      <RouterLink
-        to="/auth/login"
-        class="font-bold text-blue-500 underline underline-offset-4"
-      >
+      <RouterLink to="/auth/login" class="font-bold text-blue-500 underline underline-offset-4">
         login
       </RouterLink>
     </div>
@@ -66,7 +57,7 @@ import { required, email } from "@vuelidate/validators";
 import { useClientApi } from "@/utils/api.ts";
 import TextField from "@/components/TextField.vue";
 import IconSuccess from "@/components/icons/IconSuccess.vue";
-import ButtonComponent from '@/components/ButtonComponent.vue'
+import ButtonComponent from "@/components/ButtonComponent.vue";
 
 const api = useClientApi();
 const router = useRouter();

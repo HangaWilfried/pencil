@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount, ref } from "vue";
 
-import { useClientApi } from '@/utils/api.ts'
-import type { TagDTO } from '@/utils/types.ts'
+import { useClientApi } from "@/utils/api.ts";
+import type { TagDTO } from "@/utils/types.ts";
 
-import TagDetailsModal from '@/components/TagDetailsModal.vue'
-import TagCreateModal from '@/components/TagCreateModal.vue'
+import TagDetailsModal from "@/components/TagDetailsModal.vue";
+import TagCreateModal from "@/components/TagCreateModal.vue";
 
 const tags = ref<TagDTO[]>([]);
 const isLoading = ref<boolean>(false);
@@ -15,16 +15,16 @@ const api = useClientApi();
 onBeforeMount(async () => {
   isLoading.value = true;
   const { data } = await api.getAllTags();
-  if(data) {
+  if (data) {
     tags.value = data;
   }
   isLoading.value = false;
-})
+});
 </script>
 
 <template>
   <div class="space-y-4">
-    <div class="flex justify-between items-center">
+    <div class="flex items-center justify-between">
       <div class="flex flex-col gap-2">
         <h1>Tag</h1>
         <span>Discover amazing tags that users like you create</span>
@@ -47,7 +47,7 @@ onBeforeMount(async () => {
           <TagDetailsModal v-for="tag in tags" :key="tag.id" :tag="tag" />
         </template>
         <tr>
-          <td colspan="3" class="text-center py-2">No tag has been created.</td>
+          <td colspan="3" class="py-2 text-center">No tag has been created.</td>
         </tr>
       </tbody>
     </table>

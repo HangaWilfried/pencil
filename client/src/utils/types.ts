@@ -45,14 +45,17 @@ export type PostDTO = {
 
 export type RegisterPostDTO = {
   title: string;
+  tags: string[];
   content: string;
-  userId: string;
+  medias: string[];
 };
 
 export type UpdatePostDTO = {
-  title: string;
-  content: string;
   id: string;
+  title: string;
+  tags: string[];
+  content: string;
+  medias: string[];
 };
 
 export type TagDTO = {
@@ -64,5 +67,10 @@ export type TagDTO = {
 };
 
 export enum Theme {
-  Blue = 'blue',
+  Blue = "blue",
+}
+
+export interface DropdownOption<T> {
+  getText: () => string;
+  getValue: () => T;
 }
