@@ -13,7 +13,10 @@ withDefaults(
 );
 
 const classname = {
+  red: "bg-red-500 text-black active:ring-1 active:ring-red-500",
   blue: "text-white bg-blue-500 active:ring-1 active:ring-blue-500",
+  green: "text-black bg-green-500 active:ring-1 active:ring-green-500",
+  yellow: "text-black bg-yellow-500 active:ring-1 active:ring-yellow-500",
 };
 </script>
 

@@ -68,6 +68,9 @@ export type TagDTO = {
 
 export enum Theme {
   Blue = "blue",
+  Red = "red",
+  Green = "green",
+  Yellow = "yellow",
 }
 
 export interface DropdownOption<T> {
