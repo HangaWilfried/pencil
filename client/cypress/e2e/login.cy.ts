@@ -1,7 +1,7 @@
 describe('home page', () =>{
 beforeEach ( () =>{
     cy.visit('/');
-    cy.get("[data-test='get-started-bouton']").as("getStarted");
+    cy.get("[data-test='startBtn']").as("getStarted");
 
     cy.get("@getStarted").should("have.text", "Get started");
 
@@ -25,9 +25,9 @@ it('should allow a user to log in with empty email and password',()=>{
     cy.get('[data-test="login-button"]').click();
     cy.get('[data-test="error-email"] > span').should('be.visible').and('contain', 'Value is required');
     cy.get('[data-test="error-password"] > span').should('be.visible').and('contain', 'Value is required');
-    
+
 })
-    
+
 });
 
 

@@ -34,7 +34,7 @@
         label="Enter your password"
         name="password"
       />
-      <ButtonComponent type="submit" class="mt-4 p-4" :is-loading="isLoading">
+      <ButtonComponent data-test="create-button" type="submit" class="mt-4 p-4" :is-loading="isLoading">
         Register
       </ButtonComponent>
     </form>

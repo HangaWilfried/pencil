@@ -4,7 +4,7 @@ describe("Connexion", () => {
   it("Nous devons etre capable de nous connecter a l'application", () => {
     cy.visit("/");
 
-    cy.get("[data-test='get-started-bouton']").as("getStarted");
+    cy.get("[data-test='startBtn']").as("getStarted");
 
     cy.get("@getStarted").should("have.text", "Get started");
 
