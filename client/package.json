@@ -13,8 +13,9 @@
     "test:e2e:dev": "start-server-and-test 'vite dev --port 4173' http://localhost:4173 'cypress open --e2e'",
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
-    "lint": "eslint . --fix",
-    "format": "prettier --write src/"
+    "lint": "eslint . --fix", 
+    "format": "prettier --write src/",
+    "test:e2e:edge": "cypress open --browser edge --config baseUrl=\"http://localhost:5173\""
   },
   "dependencies": {
     "@headlessui/vue": "^1.7.23",

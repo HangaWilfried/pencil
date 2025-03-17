@@ -39,7 +39,7 @@ const formControl = computed<string[]>(() => {
       :placeholder="placeholder"
       :data-test="`input-${name}`"
     />
-    <div class="flex flex-col gap-0.5 text-sm text-red-500">
+    <div :data-test="`error-${name}`" class="flex flex-col gap-0.5 text-sm text-red-500">
       <span v-for="error in errors" :key="error.$uid">
         {{ error.$message }}
       </span>

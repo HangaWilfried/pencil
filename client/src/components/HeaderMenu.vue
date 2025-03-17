@@ -14,7 +14,7 @@ defineProps<{
       role="button"
       class="cursor-pointer rounded-md bg-blue-500 px-2 py-0.5 text-white"
     >
-      <span>{{ user.lastname[0] }}</span>
+      <span>{{ user.lastname?.[0] }}</span>
     </div>
     <ul
       tabindex="0"
