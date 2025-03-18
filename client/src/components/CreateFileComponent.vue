@@ -4,7 +4,7 @@ import { ref } from "vue";
 import { useClientApi } from "@/utils/api.ts";
 
 import ImageComponent from "@/components/ImageComponent.vue";
-import { PlusCircleIcon, PhoneIcon } from "@heroicons/vue/24/solid";
+import { PhotoIcon } from "@heroicons/vue/24/solid";
 
 const api = useClientApi();
 
@@ -28,13 +28,13 @@ const handleFileChange = async (e: Event): Promise<void> => {
 </script>
 
 <template>
-  <div class="grid auto-cols-max grid-flow-col gap-2">
+  <div class="grid grid-cols-2 gap-2 rounded-lg border border-gray-300 bg-gray-100 p-2">
     <label
       for="image"
-      class="relative flex h-32 flex-col items-center justify-center gap-2 rounded-lg p-2"
+      class="relative flex h-32 flex-col items-center justify-center gap-1 rounded-lg border border-gray-300 p-2"
     >
-      <PhoneIcon class="size-8" />
-      <PlusCircleIcon class="size-5" />
+      <PhotoIcon class="size-8 text-gray-600" />
+      <span class="text-xs">No file chosen</span>
       <input
         id="image"
         type="file"

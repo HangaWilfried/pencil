@@ -15,8 +15,8 @@ import CreateFileComponent from "@/components/CreateFileComponent.vue";
 
 const api = useClientApi();
 
-const isLoading = ref(true);
-const isPending = ref(true);
+const isLoading = ref<boolean>(true);
+const isPending = ref<boolean>(false);
 
 const tags = ref<TagDTO[]>([]);
 
@@ -66,15 +66,13 @@ const createPost = async (): Promise<void> => {
 </script>
 
 <template>
-  <form @submit.prevent="createPost" class="flex flex-col gap-4 rounded-lg bg-white p-5">
-    <div class="flex gap-2">
-      <div class="flex grow flex-col gap-2">
-        <TextField v-model="post.title" name="title" label="Title" />
-        <TextAreaField v-model="post.content" name="content" label="Description" />
-        <DropdownComponent v-model="post.tags" :options="tags.map(toTagOption)" />
-      </div>
-      <CreateFileComponent v-model="post.medias" />
+  <form @submit.prevent="createPost" class="flex gap-4 rounded-lg bg-white p-5">
+    <div class="flex grow flex-col gap-2">
+      <TextField v-model="post.title" name="title" label="Title" />
+      <DropdownComponent label="tags" v-model="post.tags" :options="tags.map(toTagOption)" />
+      <TextAreaField v-model="post.content" name="content" label="Description" />
+      <ButtonComponent class="mt-4 p-4" :is-loading="isPending" type="submit">Save</ButtonComponent>
     </div>
-    <ButtonComponent :is-loading="isPending" type="submit">Save</ButtonComponent>
+    <CreateFileComponent class="w-1/3" v-model="post.medias" />
   </form>
 </template>

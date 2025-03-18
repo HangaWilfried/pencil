@@ -22,7 +22,7 @@ const classname = {
 
 <template>
   <button :disabled="isLoading" :class="classname[theme]">
-    <span class="loading loading-ring loading-xs" v-if="isLoading"></span>
+    <span class="loading loading-spinner loading-lg" v-if="isLoading"></span>
     <slot v-else />
   </button>
 </template>

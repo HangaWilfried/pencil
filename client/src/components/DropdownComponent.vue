@@ -5,6 +5,7 @@ import { ChevronDownIcon } from "@heroicons/vue/24/outline";
 
 const props = defineProps<{
   isLoading?: boolean;
+  label: string;
   options: Array<DropdownOption<unknown>>;
   defaultValues?: Array<DropdownOption<unknown>>;
 }>();
@@ -14,53 +15,75 @@ const selectedOptions = ref<Array<DropdownOption<unknown>>>(props.defaultValues 
 
 const handleOptionsChange = (option: DropdownOption<unknown>): void => {
   if (isSelected(option)) {
-    selectedOptions.value = selectedOptions.value.filter((it) => it.getText !== option.getText);
+    selectedOptions.value = selectedOptions.value.filter((it) => it.getText() !== option.getText());
   } else {
     selectedOptions.value.push(option);
   }
-  model.value = selectedOptions.value.map((it: DropdownOption<unknown>) => it.getValue);
+  model.value = selectedOptions.value.map((it: DropdownOption<unknown>) => it.getValue());
 };
 
 const isSelected = (option: DropdownOption<unknown>): boolean => {
-  return selectedOptions.value.some((it) => it.getText === option.getText);
+  return selectedOptions.value.some((it) => it.getText() === option.getText());
 };
 
 const show = ref<boolean>(false);
 </script>
 
 <template>
-  <div class="relative" tabindex="0" @blur="show = false" @focus="show = true">
-    <div class="flex items-center gap-4">
-      <div class="flex flex-wrap gap-2 rounded-lg border p-1"></div>
-      <span class="size-auto rounded-full p-1 hover:border">
-        <ChevronDownIcon class="size-5" />
-      </span>
-    </div>
-    <div class="absolute top-2 right-0 z-20 rounded-lg bg-white p-2 shadow">
-      <div v-if="isLoading" class="flex items-center gap-2">
-        <span class="loading-xs loading-spinner text-blue-300"></span>
-        <span>Loading</span>
-      </div>
-      <template v-else>
-        <label
-          :key="option.getText"
-          :for="option.getText"
-          v-for="option in options"
-          class="flex items-center gap-2 rounded-lg p-1 text-gray-900 hover:bg-blue-50 has-checked:bg-blue-100"
+  <section class="flex flex-col gap-2">
+    <span>{{ label }}</span>
+    <div
+      tabindex="0"
+      @mousedown="show = true"
+      @mouseleave="show = false"
+      class="relative w-full rounded-md border border-slate-300 focus:border-blue-500 focus:ring focus:ring-blue-300"
+    >
+      <div class="flex items-center justify-between p-2">
+        <div class="flex flex-wrap gap-x-2">
+          <span
+            class="rounded-lg border px-1"
+            v-for="option in selectedOptions"
+            :key="option.getText()"
+          >
+            {{ option.getText() }}
+          </span>
+        </div>
+        <span
+          :class="[
+            'size-auto rounded-full p-1 transition ease-linear hover:border',
+            show ? 'rotate-180' : 'rotate-0',
+          ]"
         >
-          <span class="relative size-4 rounded-lg border">
+          <ChevronDownIcon class="size-5" />
+        </span>
+      </div>
+      <div
+        v-if="show"
+        class="absolute right-0 z-20 w-full rounded-lg border border-slate-300 bg-white p-2 shadow-lg"
+      >
+        <div v-if="isLoading" class="flex items-center gap-2">
+          <span class="loading-xs loading-spinner text-blue-300"></span>
+          <span>Loading</span>
+        </div>
+        <div class="space-y-2" v-else>
+          <label
+            :key="option.getText()"
+            :for="option.getText()"
+            v-for="option in options"
+            class="flex items-center gap-2 rounded p-2 text-gray-900 hover:bg-blue-50 has-checked:bg-blue-50"
+          >
             <input
               type="checkbox"
-              :id="option.getText"
-              :value="option.getValue"
+              :id="option.getText()"
+              :value="option.getValue()"
               :checked="isSelected(option)"
               @change="handleOptionsChange(option)"
-              class="absolute inset-0 size-full rounded-lg border-none outline-none"
+              class="size-4 rounded-lg border"
             />
-          </span>
-          <span>{{ option.getText }}</span>
-        </label>
-      </template>
+            <span>{{ option.getText() }}</span>
+          </label>
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
 </template>
