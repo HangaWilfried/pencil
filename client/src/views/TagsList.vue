@@ -23,7 +23,7 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <div class="space-y-4">
+  <div class="space-y-4 p-10">
     <div class="flex items-center justify-between">
       <div class="flex flex-col gap-2">
         <h1>Tag</h1>

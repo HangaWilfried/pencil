@@ -29,6 +29,18 @@ const routes = [
         meta: { requiresAuth: true },
         component: () => import("@/views/post/CreatePostPage.vue"),
       },
+      {
+        path: "post/edit",
+        name: "edit post page",
+        meta: { requiresAuth: true },
+        component: () => import("@/views/post/EditPostPage.vue"),
+      },
+      {
+        path: "tags",
+        name: "tags list page",
+        meta: { requiresAuth: true },
+        component: () => import("@/views/TagsList.vue"),
+      },
     ],
   },
   {

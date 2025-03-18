@@ -1,1 +1,0 @@
-import{d as o,c as s,b as a,h as e,p as c,j as n,a as r}from"./index-BPnE_UG1.js";const _={class:"p-10"},i={class:"flex justify-center"},l=o({__name:"AuthLayout",setup(p){return(d,m)=>{const t=n("router-view");return r(),s("div",_,[a("div",i,[e(c)]),e(t)])}}});export{l as default};

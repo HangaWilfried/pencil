@@ -15,6 +15,10 @@
   <div v-else class="m-auto w-[90%] max-w-md space-y-4 pt-10">
     <span class="text-xl font-bold"> Welcome it's a pleasure have you among us. </span>
     <form class="flex flex-col gap-2" @submit.prevent="doRegister">
+      <div class="flex items-end gap-1 rounded bg-red-200 p-2 text-sm" v-if="errorMessage">
+        <ExclamationCircleIcon class="size-6 text-red-800" />
+        <span class="font-medium text-gray-900">{{ errorMessage }}</span>
+      </div>
       <TextField
         v-model="user.lastname"
         :errors="v$.lastname.$errors"
@@ -34,7 +38,12 @@
         label="Enter your password"
         name="password"
       />
-      <ButtonComponent data-test="create-button" type="submit" class="mt-4 p-4" :is-loading="isLoading">
+      <ButtonComponent
+        data-test="create-button"
+        type="submit"
+        class="mt-4 p-4"
+        :is-loading="isLoading"
+      >
         Register
       </ButtonComponent>
     </form>
@@ -58,6 +67,7 @@ import { useClientApi } from "@/utils/api.ts";
 import TextField from "@/components/TextField.vue";
 import IconSuccess from "@/components/icons/IconSuccess.vue";
 import ButtonComponent from "@/components/ButtonComponent.vue";
+import { ExclamationCircleIcon } from "@heroicons/vue/24/outline";
 
 const api = useClientApi();
 const router = useRouter();
