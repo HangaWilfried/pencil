@@ -79,12 +79,17 @@ export function useClientApi() {
     },
     async createAccount(user: RegisterDTO): Promise<RequestResponse> {
       try {
-        await fetch(`${baseUrl}/auth/register`, {
+        const response = await fetch(`${baseUrl}/auth/register`, {
           method: "POST",
           headers: getHeader(),
           body: JSON.stringify(user),
         });
-        return {};
+        if(response.ok) {
+          return {};
+        }
+        return {
+          error: response.statusText
+        };
       } catch (error) {
         return this.handleError(error);
       }
