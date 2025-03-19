@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, useId } from "vue";
+import { ref } from "vue";
 
 import { useVuelidate } from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
@@ -8,11 +8,12 @@ import { PlusCircleIcon } from "@heroicons/vue/24/solid";
 import { useClientApi } from "@/utils/api.ts";
 
 import TextField from "@/components/TextField.vue";
+import ModalWrapper from "@/components/ModalWrapper.vue";
 import TextAreaField from "@/components/TextAreaField.vue";
 import ButtonComponent from "@/components/ButtonComponent.vue";
 
-const id = useId();
 const api = useClientApi();
+const showModal = ref<boolean>(false);
 
 const tagForm = ref({
   name: "",
@@ -51,27 +52,20 @@ const createTag = async (): Promise<void> => {
 </script>
 
 <template>
-  <ButtonComponent class="btn p-1" onclick="id.showModal()">
+  <ButtonComponent class="btn p-1" @click="showModal = true">
     <span>Add</span>
     <PlusCircleIcon class="size-5" />
   </ButtonComponent>
-  <dialog :id="id" class="modal">
-    <div class="modal-box">
-      <div class="modal-action">
-        <form @submit.prevent="createTag" class="flex flex-col gap-3" method="dialog">
-          <span class="text-xs text-red-500">{{ errorMessage }}</span>
-          <TextField name="name" label="Provide a name" v-model="tagForm.name" />
-          <TextAreaField
-            v-model="tagForm.description"
-            label="Provide description"
-            name="description"
-          />
-          <div class="flex items-center gap-2 py-4">
-            <ButtonComponent class="btn" :disabled="isLoading">cancel</ButtonComponent>
-            <ButtonComponent type="submit" :is-loading="isLoading">save</ButtonComponent>
-          </div>
-        </form>
+
+  <ModalWrapper v-if="showModal">
+    <form @submit.prevent="createTag" class="flex flex-col gap-3" method="dialog">
+      <span class="text-xs text-red-500">{{ errorMessage }}</span>
+      <TextField name="name" label="Provide a name" v-model="tagForm.name" />
+      <TextAreaField v-model="tagForm.description" label="Provide description" name="description" />
+      <div class="flex items-stretch gap-2 py-4">
+        <ButtonComponent class="h-10 !bg-black" :disabled="isLoading">cancel</ButtonComponent>
+        <ButtonComponent class="h-10" type="submit" :is-loading="isLoading">save</ButtonComponent>
       </div>
-    </div>
-  </dialog>
+    </form>
+  </ModalWrapper>
 </template>
