@@ -15,7 +15,11 @@
   <div v-else class="m-auto w-[90%] max-w-md space-y-4 pt-10">
     <span class="text-xl font-bold"> Welcome it's a pleasure have you among us. </span>
     <form class="flex flex-col gap-2" @submit.prevent="doRegister">
-      <div class="flex items-end gap-1 rounded bg-red-200 p-2 text-sm" v-if="errorMessage">
+      <div
+        data-test="error-message"
+        class="flex items-center gap-1 rounded bg-red-200 p-2 text-sm"
+        v-if="errorMessage"
+      >
         <ExclamationCircleIcon class="size-6 text-red-800" />
         <span class="font-medium text-gray-900">{{ errorMessage }}</span>
       </div>

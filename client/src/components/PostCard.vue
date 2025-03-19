@@ -36,19 +36,13 @@ const fetchUserData = async () => {
 };
 
 const fetchPrimaryImage = async () => {
-  const { data } = await api.getFileById(props.post.medias[0]);
+  const { data } = await api.getFileById(props.post.medias?.[0]);
   if (data) primaryImage.value = data;
 };
 
 onBeforeMount(async () => {
   isLoading.value = true;
   await Promise.all([fetchPrimaryImage(), fetchUserData()]);
-  isLoading.value = false;
-});
-
-api.getUserById(props.post.userId).then((response) => {
-  const { data } = response;
-  if (data) user.value = data.lastname + " " + data.firstname;
   isLoading.value = false;
 });
 </script>

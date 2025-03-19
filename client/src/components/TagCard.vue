@@ -30,7 +30,7 @@ if (id) {
   <div class="divide-y divide-gray-100 rounded-lg bg-white">
     <h1 class="py-1">{{ tag.name }}</h1>
     <span v-if="isLoading" class="loading-spinner loading-lg text-gray-800"></span>
-    <div v-else class="grid grid-cols-4">
+    <div v-else class="grid grid-cols-3 gap-8">
       <PostCard v-for="post in posts" :key="post.id" :post="post" />
     </div>
   </div>

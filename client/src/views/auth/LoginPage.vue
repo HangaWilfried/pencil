@@ -42,7 +42,11 @@
     </form>
     <div class="flex gap-2 text-sm">
       <span>You don't yet have account</span>
-      <RouterLink to="/auth/register" class="font-bold text-blue-500 underline underline-offset-4">
+      <RouterLink
+        data-test="register-btn"
+        to="/auth/register"
+        class="font-bold text-blue-500 underline underline-offset-4"
+      >
         register
       </RouterLink>
     </div>

@@ -16,7 +16,7 @@ describe("Connexion", () => {
 
     cy.intercept(
       {
-        url: "/api/auth/login",
+        url: "http://localhost:4500/api/auth/login",
         method: "POST",
       },
       {
