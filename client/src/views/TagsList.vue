@@ -12,14 +12,16 @@ const isLoading = ref<boolean>(false);
 
 const api = useClientApi();
 
-onBeforeMount(async () => {
+const fetchTags = async () => {
   isLoading.value = true;
   const { data } = await api.getAllTags();
   if (data) {
     tags.value = data;
   }
   isLoading.value = false;
-});
+};
+
+onBeforeMount(fetchTags);
 </script>
 
 <template>
@@ -29,7 +31,7 @@ onBeforeMount(async () => {
         <h1>Tag</h1>
         <span>Discover amazing tags that users like you create</span>
       </div>
-      <TagCreateModal />
+      <TagCreateModal @completed="fetchTags" />
     </div>
     <div v-if="isLoading" class="p-10">
       <span class="loading loading-lg loading-spinner"></span>

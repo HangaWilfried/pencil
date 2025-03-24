@@ -5,6 +5,7 @@ import { useVuelidate } from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 import { PlusCircleIcon } from "@heroicons/vue/24/solid";
 
+import { toast } from "vue3-toastify";
 import { useClientApi } from "@/utils/api.ts";
 
 import TextField from "@/components/TextField.vue";
@@ -14,6 +15,8 @@ import ButtonComponent from "@/components/ButtonComponent.vue";
 
 const api = useClientApi();
 const showModal = ref<boolean>(false);
+
+const emit = defineEmits(["completed"]);
 
 const tagForm = ref({
   name: "",
@@ -45,9 +48,14 @@ const createTag = async (): Promise<void> => {
   if (error) {
     errorMessage.value = error;
     isLoading.value = false;
-  }
+    toast.error("Error creating tag");
+  } else {
+    isLoading.value = false;
+    showModal.value = false;
 
-  isLoading.value = false;
+    emit("completed");
+    toast.success("Tag created successfully.");
+  }
 };
 </script>
 
@@ -57,13 +65,13 @@ const createTag = async (): Promise<void> => {
     <PlusCircleIcon class="size-5" />
   </ButtonComponent>
 
-  <ModalWrapper v-if="showModal">
+  <ModalWrapper @close="showModal = false" :is-closable="!isLoading" v-if="showModal">
     <form @submit.prevent="createTag" class="flex flex-col gap-3" method="dialog">
       <span class="text-xs text-red-500">{{ errorMessage }}</span>
-      <TextField name="name" label="Provide a name" v-model="tagForm.name" />
+      <TextField :errors="v$.name.$errors" name="name" label="Provide a name" v-model="tagForm.name" />
       <TextAreaField v-model="tagForm.description" label="Provide description" name="description" />
       <div class="flex items-stretch gap-2 py-4">
-        <ButtonComponent class="h-10 !bg-black" :disabled="isLoading">cancel</ButtonComponent>
+        <ButtonComponent @click="showModal = false" type="button" class="h-10 !bg-black" :disabled="isLoading">cancel</ButtonComponent>
         <ButtonComponent class="h-10" type="submit" :is-loading="isLoading">save</ButtonComponent>
       </div>
     </form>
