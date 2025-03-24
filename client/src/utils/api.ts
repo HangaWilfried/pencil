@@ -70,21 +70,34 @@ export function useClientApi() {
           headers: getHeader(),
           body: JSON.stringify(credential),
         });
-        const token = await response.text();
-        localStorage.setItem("access-token", token);
-        return {};
+
+        if (response.ok) {
+          const token = await response.text();
+          localStorage.setItem("access-token", token);
+          return {};
+        }
+
+        return {
+          error: response.statusText,
+        };
       } catch (error) {
         return this.handleError(error);
       }
     },
     async createAccount(user: RegisterDTO): Promise<RequestResponse> {
       try {
-        await fetch(`${baseUrl}/auth/register`, {
+        const response = await fetch(`${baseUrl}/auth/register`, {
           method: "POST",
           headers: getHeader(),
           body: JSON.stringify(user),
         });
-        return {};
+
+        if (response.ok) {
+          return {};
+        }
+        return {
+          error: response.statusText,
+        };
       } catch (error) {
         return this.handleError(error);
       }
@@ -95,8 +108,14 @@ export function useClientApi() {
           method: "GET",
           headers: getHeader(),
         });
-        const user = await response.json();
-        return { data: user };
+
+        if (response.ok) {
+          const user = await response.json();
+          return { data: user };
+        }
+        return {
+          error: response.statusText,
+        };
       } catch (error) {
         return this.handleError(error);
       }
@@ -108,15 +127,22 @@ export function useClientApi() {
           headers: getHeader(),
           body: JSON.stringify(post),
         });
-        const id = await response.json();
-        return { data: id };
+
+        if (response.ok) {
+          const id = await response.json();
+          return { data: id };
+        }
+
+        return {
+          error: response.statusText,
+        };
       } catch (error) {
         return this.handleError(error);
       }
     },
     async editPost(post: UpdatePostDTO): Promise<RequestResponse> {
       try {
-        await fetch(`${baseUrl}/post/${post.id}`, {
+        const response = await fetch(`${baseUrl}/post/${post.id}`, {
           method: "PUT",
           headers: getHeader(),
           body: JSON.stringify({
@@ -124,40 +150,68 @@ export function useClientApi() {
             title: post.title,
           }),
         });
-        return {};
+
+        if(response.ok) {
+          return {};
+        }
+
+        return {
+          error: response.statusText
+        };
       } catch (error) {
         return this.handleError(error);
       }
     },
     async draftPost(postId: string): Promise<RequestResponse> {
       try {
-        await fetch(`${baseUrl}/post/${postId}/draft`, {
+        const response = await fetch(`${baseUrl}/post/${postId}/draft`, {
           method: "PUT",
           headers: getHeader(),
         });
-        return {};
+
+        if(response.ok) {
+          return {};
+        }
+
+        return {
+          error: response.statusText
+        };
       } catch (error) {
         return this.handleError(error);
       }
     },
     async publishPost(postId: string): Promise<RequestResponse> {
       try {
-        await fetch(`${baseUrl}/post/${postId}/publish`, {
+        const response = await fetch(`${baseUrl}/post/${postId}/publish`, {
           method: "PUT",
           headers: getHeader(),
         });
-        return {};
+
+        if(response.ok) {
+          return {};
+        }
+
+        return {
+          error: response.statusText
+        };
       } catch (error) {
         return this.handleError(error);
       }
     },
     async deletePost(postId: string): Promise<RequestResponse> {
       try {
-        await fetch(`${baseUrl}/post/${postId}`, {
+        const response = await fetch(`${baseUrl}/post/${postId}`, {
           method: "DELETE",
           headers: getHeader(),
         });
-        return {};
+
+        if(response.ok) {
+          return {};
+        }
+
+        return {
+          error: response.statusText
+        };
       } catch (error) {
         return this.handleError(error);
       }
@@ -168,8 +222,15 @@ export function useClientApi() {
           method: "GET",
           headers: getHeader(),
         });
-        const post = await response.json();
-        return { data: post };
+
+        if(response.ok) {
+          const post = await response.json();
+          return { data: post };
+        }
+
+        return {
+          error: response.statusText
+        };
       } catch (error) {
         return this.handleError(error);
       }
@@ -180,8 +241,15 @@ export function useClientApi() {
           method: "GET",
           headers: getHeader(),
         });
-        const posts = await response.json();
-        return { data: posts };
+
+        if(response.ok) {
+          const posts = await response.json();
+          return { data: posts };
+        }
+
+        return {
+          error: response.statusText
+        };
       } catch (error) {
         return this.handleError(error);
       }
@@ -192,8 +260,15 @@ export function useClientApi() {
           method: "GET",
           headers: getHeader(),
         });
-        const posts = await response.json();
-        return { data: posts };
+
+        if(response.ok) {
+          const posts = await response.json();
+          return { data: posts };
+        }
+
+        return {
+          error: response.statusText
+        }
       } catch (error) {
         return this.handleError(error);
       }
@@ -204,8 +279,15 @@ export function useClientApi() {
           method: "GET",
           headers: getHeader(),
         });
-        const posts = await response.json();
-        return { data: posts };
+
+        if(response.ok) {
+          const posts = await response.json();
+          return { data: posts };
+        }
+
+        return {
+          error: response.statusText
+        }
       } catch (error) {
         return this.handleError(error);
       }
@@ -216,8 +298,15 @@ export function useClientApi() {
           method: "GET",
           headers: getHeader(),
         });
-        const tags = await response.json();
-        return { data: tags };
+
+        if(response.ok) {
+          const tags = await response.json();
+          return { data: tags };
+        }
+
+        return {
+          error: response.statusText
+        }
       } catch (error) {
         return this.handleError(error);
       }
@@ -230,8 +319,15 @@ export function useClientApi() {
           headers: getHeader(),
           body: JSON.stringify(tag),
         });
-        const id = await response.text();
-        return { data: id };
+
+        if(response.ok) {
+          const id = await response.text();
+          return { data: id };
+        }
+
+        return {
+          error: response.statusText
+        }
       } catch (error) {
         return this.handleError(error);
       }
@@ -239,12 +335,19 @@ export function useClientApi() {
 
     async editTag(tag: TagDTO): Promise<RequestResponse> {
       try {
-        await fetch(`${baseUrl}/tag/${tag.id}`, {
+        const response = await fetch(`${baseUrl}/tag/${tag.id}`, {
           method: "PUT",
           headers: getHeader(),
           body: JSON.stringify(tag),
         });
-        return {};
+
+        if(response.ok) {
+          return {};
+        }
+
+        return {
+          error: response.statusText
+        }
       } catch (error) {
         return this.handleError(error);
       }
@@ -256,8 +359,15 @@ export function useClientApi() {
           method: "GET",
           headers: getHeader(),
         });
-        const file = await response.clone().blob();
-        return { data: URL.createObjectURL(file) };
+
+        if(response.ok) {
+          const file = await response.clone().blob();
+          return { data: URL.createObjectURL(file) };
+        }
+
+        return {
+          error: response.statusText
+        }
       } catch (error) {
         return this.handleError(error);
       }
@@ -270,8 +380,15 @@ export function useClientApi() {
           headers: getHeader(false),
           body: JSON.stringify(file),
         });
-        const fileId = await response.text();
-        return { data: fileId };
+
+        if(response.ok) {
+          const fileId = await response.text();
+          return { data: fileId };
+        }
+
+        return {
+          error: response.statusText
+        }
       } catch (error) {
         return this.handleError(error);
       }

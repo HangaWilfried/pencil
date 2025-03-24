@@ -68,10 +68,21 @@ const createTag = async (): Promise<void> => {
   <ModalWrapper @close="showModal = false" :is-closable="!isLoading" v-if="showModal">
     <form @submit.prevent="createTag" class="flex flex-col gap-3" method="dialog">
       <span class="text-xs text-red-500">{{ errorMessage }}</span>
-      <TextField :errors="v$.name.$errors" name="name" label="Provide a name" v-model="tagForm.name" />
+      <TextField
+        :errors="v$.name.$errors"
+        name="name"
+        label="Provide a name"
+        v-model="tagForm.name"
+      />
       <TextAreaField v-model="tagForm.description" label="Provide description" name="description" />
       <div class="flex items-stretch gap-2 py-4">
-        <ButtonComponent @click="showModal = false" type="button" class="h-10 !bg-black" :disabled="isLoading">cancel</ButtonComponent>
+        <ButtonComponent
+          @click="showModal = false"
+          type="button"
+          class="h-10 !bg-black"
+          :disabled="isLoading"
+          >cancel</ButtonComponent
+        >
         <ButtonComponent class="h-10" type="submit" :is-loading="isLoading">save</ButtonComponent>
       </div>
     </form>
