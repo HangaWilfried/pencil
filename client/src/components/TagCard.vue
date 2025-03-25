@@ -27,11 +27,14 @@ if (id) {
 </script>
 
 <template>
-  <div class="divide-y divide-gray-100 rounded-lg bg-white">
+  <section class="divide-y divide-gray-100 rounded-lg bg-white">
     <h1 class="py-1">{{ tag.name }}</h1>
-    <span v-if="isLoading" class="loading-spinner loading-lg text-gray-800"></span>
-    <div v-else class="grid grid-cols-4">
-      <PostCard v-for="post in posts" :key="post.id" :post="post" />
+    <div class="p-4">
+      <span v-if="isLoading" class="loading-spinner loading-lg text-gray-800"></span>
+      <div v-else-if="posts.length" class="grid grid-cols-4">
+        <PostCard v-for="post in posts" :key="post.id" :post="post" />
+      </div>
+      <div v-else>There is no post created for this tag!</div>
     </div>
-  </div>
+  </section>
 </template>

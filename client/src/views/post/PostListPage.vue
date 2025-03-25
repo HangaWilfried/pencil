@@ -2,9 +2,17 @@
   <div v-if="isLoading" class="flex items-center justify-center p-10">
     <span class="loading loading-xl loading-ring text-gray-900"></span>
   </div>
-  <div v-else-if="tags.length" class="flex flex-col gap-4 p-4">
-    <TagCard v-for="tag in tags" :key="tag.id" :tag="tag" />
-  </div>
+  <section v-else-if="tags.length">
+    <RouterLink class="float-right" to="/post/create">
+      <ButtonComponent class="p-1">
+        <span>Add</span>
+        <PlusCircleIcon class="size-5" />
+      </ButtonComponent>
+    </RouterLink>
+    <div class="flex flex-col gap-4 p-4">
+      <TagCard v-for="tag in tags" :key="tag.id" :tag="tag" />
+    </div>
+  </section>
   <NoItemsComponent v-else>
     <div class="flex flex-col items-center gap-2 text-sm font-bold">
       <span>No Post has been added for now.</span>

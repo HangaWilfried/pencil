@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { onBeforeMount, ref } from "vue";
+import { useClientApi } from "@/utils/api.ts";
+import { toast } from "vue3-toastify";
 
 const props = withDefaults(
   defineProps<{
@@ -11,17 +13,27 @@ const props = withDefaults(
   },
 );
 
-const source = computed<string>(() => {
+const api = useClientApi();
+const source = ref<string>();
+const isLoading = ref<boolean>(false);
+
+onBeforeMount(async () => {
+  isLoading.value = true;
   if (props.isLocal) {
     const url = `../assets/${props.path}`;
-    return new URL(url, import.meta.url).href;
+    source.value = new URL(url, import.meta.url).href;
+  } else {
+    const {data, error} = await api.getFileById(props.path);
+    if(error) toast.error(error);
+    if (data) source.value = data;
   }
-  return props.path;
+  isLoading.value = false;
 });
 </script>
 
 <template>
   <div class="overflow-hidden">
-    <img class="size-full object-cover" :src="source" :alt="`placeholder for ${path} image`" />
+    <span class="loading loading-ring text-yellow-500" v-if="isLoading"></span>
+    <img v-else class="size-full object-cover" :src="source" :alt="`placeholder for ${path} image`" />
   </div>
 </template>

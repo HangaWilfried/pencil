@@ -2,7 +2,7 @@
 import { ref } from "vue";
 
 import { useVuelidate } from "@vuelidate/core";
-import { required } from "@vuelidate/validators";
+import { helpers, required } from "@vuelidate/validators";
 import { PlusCircleIcon } from "@heroicons/vue/24/solid";
 
 import { toast } from "vue3-toastify";
@@ -26,7 +26,10 @@ const tagForm = ref({
 const v$ = useVuelidate(
   {
     name: {
-      required,
+      required: helpers.withMessage("Name is required", required),
+    },
+    description: {
+      required: helpers.withMessage("Please enter a description", required),
     },
   },
   tagForm,
@@ -74,7 +77,7 @@ const createTag = async (): Promise<void> => {
         label="Provide a name"
         v-model="tagForm.name"
       />
-      <TextAreaField v-model="tagForm.description" label="Provide description" name="description" />
+      <TextAreaField :errors="v$.description.$errors" v-model="tagForm.description" label="Provide description" name="description" />
       <div class="flex items-stretch gap-2 py-4">
         <ButtonComponent
           @click="showModal = false"

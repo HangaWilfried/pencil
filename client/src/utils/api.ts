@@ -63,6 +63,17 @@ export function useClientApi() {
       console.log(error);
       return { error: (error as Error).message };
     },
+    async handleResponse(r: Response, isJson?: boolean) {
+      if(r.ok) {
+        const data = isJson ? await r.json() : await r.text();
+        return {data}
+      }
+
+      const message = await r.text();
+      return {
+        error: message ?? r.statusText
+      }
+    },
     async login(credential: LoginDTO): Promise<RequestResponse> {
       try {
         const response = await fetch(`${baseUrl}/auth/login`, {
@@ -91,13 +102,7 @@ export function useClientApi() {
           headers: getHeader(),
           body: JSON.stringify(user),
         });
-
-        if (response.ok) {
-          return {};
-        }
-        return {
-          error: response.statusText,
-        };
+        return this.handleResponse(response);
       } catch (error) {
         return this.handleError(error);
       }
@@ -108,34 +113,20 @@ export function useClientApi() {
           method: "GET",
           headers: getHeader(),
         });
-
-        if (response.ok) {
-          const user = await response.json();
-          return { data: user };
-        }
-        return {
-          error: response.statusText,
-        };
+        return this.handleResponse(response, true);
       } catch (error) {
         return this.handleError(error);
       }
     },
     async createPost(post: RegisterPostDTO): Promise<RequestResponse<string>> {
+      console.log("post to stringify", post);
       try {
         const response = await fetch(`${baseUrl}/post`, {
           method: "POST",
           headers: getHeader(),
           body: JSON.stringify(post),
         });
-
-        if (response.ok) {
-          const id = await response.json();
-          return { data: id };
-        }
-
-        return {
-          error: response.statusText,
-        };
+        return this.handleResponse(response);
       } catch (error) {
         return this.handleError(error);
       }
@@ -150,14 +141,7 @@ export function useClientApi() {
             title: post.title,
           }),
         });
-
-        if(response.ok) {
-          return {};
-        }
-
-        return {
-          error: response.statusText
-        };
+        return this.handleResponse(response);
       } catch (error) {
         return this.handleError(error);
       }
@@ -168,14 +152,7 @@ export function useClientApi() {
           method: "PUT",
           headers: getHeader(),
         });
-
-        if(response.ok) {
-          return {};
-        }
-
-        return {
-          error: response.statusText
-        };
+        return this.handleResponse(response);
       } catch (error) {
         return this.handleError(error);
       }
@@ -186,14 +163,7 @@ export function useClientApi() {
           method: "PUT",
           headers: getHeader(),
         });
-
-        if(response.ok) {
-          return {};
-        }
-
-        return {
-          error: response.statusText
-        };
+        return this.handleResponse(response);
       } catch (error) {
         return this.handleError(error);
       }
@@ -204,14 +174,7 @@ export function useClientApi() {
           method: "DELETE",
           headers: getHeader(),
         });
-
-        if(response.ok) {
-          return {};
-        }
-
-        return {
-          error: response.statusText
-        };
+        return this.handleResponse(response);
       } catch (error) {
         return this.handleError(error);
       }
@@ -222,15 +185,7 @@ export function useClientApi() {
           method: "GET",
           headers: getHeader(),
         });
-
-        if(response.ok) {
-          const post = await response.json();
-          return { data: post };
-        }
-
-        return {
-          error: response.statusText
-        };
+        return this.handleResponse(response, true);
       } catch (error) {
         return this.handleError(error);
       }
@@ -241,15 +196,7 @@ export function useClientApi() {
           method: "GET",
           headers: getHeader(),
         });
-
-        if(response.ok) {
-          const posts = await response.json();
-          return { data: posts };
-        }
-
-        return {
-          error: response.statusText
-        };
+        return this.handleResponse(response, true);
       } catch (error) {
         return this.handleError(error);
       }
@@ -260,15 +207,7 @@ export function useClientApi() {
           method: "GET",
           headers: getHeader(),
         });
-
-        if(response.ok) {
-          const posts = await response.json();
-          return { data: posts };
-        }
-
-        return {
-          error: response.statusText
-        }
+        return this.handleResponse(response, true);
       } catch (error) {
         return this.handleError(error);
       }
@@ -279,15 +218,7 @@ export function useClientApi() {
           method: "GET",
           headers: getHeader(),
         });
-
-        if(response.ok) {
-          const posts = await response.json();
-          return { data: posts };
-        }
-
-        return {
-          error: response.statusText
-        }
+        return this.handleResponse(response, true);
       } catch (error) {
         return this.handleError(error);
       }
@@ -298,15 +229,7 @@ export function useClientApi() {
           method: "GET",
           headers: getHeader(),
         });
-
-        if(response.ok) {
-          const tags = await response.json();
-          return { data: tags };
-        }
-
-        return {
-          error: response.statusText
-        }
+        return this.handleResponse(response, true);
       } catch (error) {
         return this.handleError(error);
       }
@@ -319,15 +242,7 @@ export function useClientApi() {
           headers: getHeader(),
           body: JSON.stringify(tag),
         });
-
-        if(response.ok) {
-          const id = await response.text();
-          return { data: id };
-        }
-
-        return {
-          error: response.statusText
-        }
+        return this.handleResponse(response);
       } catch (error) {
         return this.handleError(error);
       }
@@ -340,14 +255,7 @@ export function useClientApi() {
           headers: getHeader(),
           body: JSON.stringify(tag),
         });
-
-        if(response.ok) {
-          return {};
-        }
-
-        return {
-          error: response.statusText
-        }
+        return this.handleResponse(response);
       } catch (error) {
         return this.handleError(error);
       }
@@ -374,21 +282,18 @@ export function useClientApi() {
     },
 
     async createFile(file: File): Promise<RequestResponse<string>> {
+      console.log("File", file);
+
+      const formData = new FormData();
+      formData.append("file", file);
+
       try {
         const response = await fetch(`${baseUrl}/media`, {
           method: "POST",
           headers: getHeader(false),
-          body: JSON.stringify(file),
+          body: formData,
         });
-
-        if(response.ok) {
-          const fileId = await response.text();
-          return { data: fileId };
-        }
-
-        return {
-          error: response.statusText
-        }
+        return this.handleResponse(response);
       } catch (error) {
         return this.handleError(error);
       }

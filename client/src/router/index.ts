@@ -19,7 +19,8 @@ const routes = [
         component: () => import("@/views/post/PostListPage.vue"),
       },
       {
-        path: "post/:id",
+        props: true,
+        path: "post/:id/details",
         name: "post details page",
         component: () => import("@/views/post/PostDetailsPage.vue"),
       },
@@ -30,7 +31,7 @@ const routes = [
         component: () => import("@/views/post/CreatePostPage.vue"),
       },
       {
-        path: "post/edit",
+        path: "post/:id/edit",
         name: "edit post page",
         meta: { requiresAuth: true },
         component: () => import("@/views/post/EditPostPage.vue"),

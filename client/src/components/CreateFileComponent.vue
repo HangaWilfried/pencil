@@ -1,22 +1,29 @@
 <script setup lang="ts">
 import { ref } from "vue";
-
 import { useClientApi } from "@/utils/api.ts";
-
-import ImageComponent from "@/components/ImageComponent.vue";
+import { toast } from "vue3-toastify";
 import { PhotoIcon } from "@heroicons/vue/24/solid";
+import ImageComponent from "@/components/ImageComponent.vue";
+
+defineProps<{ modelValue: string[] }>()
+const emit = defineEmits(["update:modelValue"]);
 
 const api = useClientApi();
-
-const sources = ref<string[]>([]);
-const model = defineModel<string[]>({ default: [] });
+const sources = ref<{id: string; path: string}[]>([]);
 
 const saveFile = async (file: File) => {
   const { data: id, error } = await api.createFile(file);
-  if (error) return;
+  if (error) {
+    toast.error(error);
+    return;
+  }
   if (id) {
-    sources.value.unshift(URL.createObjectURL(file));
-    model.value.push(id);
+    console.log("file created", id);
+    sources.value.unshift({
+      path: URL.createObjectURL(file),
+      id: id,
+    });
+    emit("update:modelValue", sources.value.map((file) => file.id));
   }
 };
 
@@ -47,8 +54,8 @@ const handleFileChange = async (e: Event): Promise<void> => {
       <ImageComponent
         class="h-32"
         :is-local="false"
-        :key="source"
-        :path="source"
+        :key="source.id"
+        :path="source.path"
         v-for="source in sources"
       />
     </template>
