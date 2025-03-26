@@ -1,34 +1,66 @@
-describe("api testing", ()=>{
-  const apiUrl="http://localhost:4500/api/auth/register";
-  it("should be able to create a account", ()=>{
+describe("register api avec intercep",()=>{
+    beforeEach(() => {
+        cy.visit("/");
+        cy.get("[data-test='startBtn']").as("getStarted");
+        cy.get("@getStarted").should("have.text", "Sign in");
 
-    cy.request({
-      method: "POST",
-      url: apiUrl,
-      body: {
-        email: "test.info@yahoo.com",
-        firstname: "stephanie",
-        lastname: "kenne",
-        password: "123456",
-      }
-    }).then((response) => {
-      expect(response.status).to.eq(200);
-      expect(response.body).to.have.property("message", "test.info@yahoo.com");
+        cy.get("@getStarted").click();
+        cy.get("[data-test='register-btn']").click();
+
+        cy.get('[data-test="input-lastname"]').type("Kenne");
+        cy.get('[data-test="input-firstname"]').type("stephanie");
+        cy.get('[data-test="input-email"]').type("test.info@yahoo.com");
+        cy.get('[data-test="input-password"]').type("1234454");
     })
-  })
-it("should not able to create an account with icorrect credential", ()=>{
-  cy.request({
-    method: "POST",
-    url: apiUrl,
-    body: {
-      email: ".com",
-      firstname: "stephanie",
-      lastname: "kenne",
-      password: "?????",
-    }
-}).then((response) => {
-  expect(response.status).to.eq(400);
-  expect(response.body).to.have.property("message", "email ist not correct");
-})
-})
+ it("cas d`erreur de message",()=>{
+
+
+
+     cy.intercept(
+         {
+             url: "http://localhost:4500/api/auth/register",
+             method: "POST",
+         },
+         {
+             statusCode: 500,
+         },
+     );
+     cy.get('[data-test="create-button"]').click();
+     cy.get('[data-test="error-message"]').should("have.text", "Internal Server Error");
+ })
+    it("cas de not found",()=>{
+
+        cy.intercept(
+            {
+                url: "http://localhost:4500/api/auth/register",
+                method: "POST",
+            },
+            {
+                statusCode: 404,
+            },
+        );
+
+        cy.get('[data-test="create-button"]').click();
+        cy.get("[data-test='error-message']").should("have.text", "Not Found");
+
+    })
+    it("cas de connection reussie",()=>{
+
+        cy.intercept(
+            {
+                url: "http://localhost:4500/api/auth/register",
+                method: "POST",
+            },
+            {
+                statusCode: 200,
+            },
+        ).as("register");
+        cy.clock()
+        cy.get('[data-test="create-button"]').click();
+        cy.get("@register").then(() => {
+            cy.get("[data-test='succeed']").should("contain", "Operation succeed");
+        })
+        cy.tick(2000)
+        cy.url().should("eq", "http://localhost:5173/auth/login");
+    })
 })

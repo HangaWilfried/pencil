@@ -1,9 +1,10 @@
 describe('home page', () =>{
 beforeEach ( () =>{
-    cy.visit('/');
+    cy.visit('/');cy.visit('/');
     cy.get("[data-test='startBtn']").as("getStarted");
 
-    cy.get("@getStarted").should("have.text", "Get started");
+    cy.get("@getStarted").should("have.text", "Sign in");
+
 
     cy.get("@getStarted").click();
 });

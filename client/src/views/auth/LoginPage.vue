@@ -7,7 +7,7 @@
     <div class="size-fit rounded-full bg-green-50 p-2">
       <IconSuccess />
     </div>
-    <span class="flex items-center gap-1">
+    <span data-test="succeed" class="flex items-center gap-1">
       Operation
       <span class="text-green-500">succeed</span>
     </span>
@@ -17,7 +17,7 @@
     <form class="flex flex-col gap-2" @submit.prevent="doLogin">
       <div class="flex items-end gap-1 rounded bg-red-200 p-2 text-sm" v-if="errorMessage">
         <ExclamationCircleIcon class="size-6 text-red-800" />
-        <span class="font-medium text-gray-900">{{ errorMessage }}</span>
+        <span data-test="error-message" class="font-medium text-gray-900">{{ errorMessage }}</span>
       </div>
       <TextField
         v-model="credential.email"

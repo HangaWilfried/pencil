@@ -26,5 +26,8 @@ describe("Connexion", () => {
     );
 
     cy.get("[data-test='login-button']").click();
+    it("utilisation du bouton as",()=>{
+      cy.get('a > .text-white > span').click();
+    })
   });
 });

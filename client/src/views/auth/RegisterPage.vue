@@ -7,7 +7,7 @@
     <div class="size-fit rounded-full bg-green-50 p-2">
       <IconSuccess />
     </div>
-    <span class="flex items-center gap-1">
+    <span data-test="succeed" class="flex items-center gap-1">
       Operation
       <span class="text-green-500">succeed</span>
     </span>

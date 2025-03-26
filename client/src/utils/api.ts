@@ -70,9 +70,15 @@ export function useClientApi() {
           headers: getHeader(),
           body: JSON.stringify(credential),
         });
-        const token = await response.text();
-        localStorage.setItem("access-token", token);
-        return {};
+        if(response.ok) {
+          const token = await response.text();
+          localStorage.setItem("access-token", token);
+          return {};
+        }
+        return {
+          error: response.statusText
+        };
+
       } catch (error) {
         return this.handleError(error);
       }

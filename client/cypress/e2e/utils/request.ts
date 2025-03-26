@@ -67,6 +67,32 @@ export function useRequests() {
   };
 
   // TODO: lire sur les closures en javascript.
+  function interceptUserAccountCreation(statusCode: number, message: string) {
+    cy.visit("/");
+    cy.get("[data-test='startBtn']").as("getStarted");
+    cy.get("@getStarted").should("have.text", "Sign in");
+
+    cy.get("@getStarted").click();
+    cy.get("[data-test='register-btn']").click();
+
+    cy.get('[data-test="input-lastname"]').type("Kenne");
+    cy.get('[data-test="input-firstname"]').type("stephanie");
+    cy.get('[data-test="input-email"]').type("test.info@yahoo.com");
+    cy.get('[data-test="input-password"]').type("1234454");
+
+    cy.intercept(
+      {
+        url: "http://localhost:4500/api/auth/register",
+        method: "POST",
+      },
+      {
+        statusCode: statusCode,
+      },
+    );
+
+    cy.get('[data-test="create-button"]').click();
+    cy.get("[data-test='error-message']").should("have.text", message);
+  }
 
   return {
     fetchUser,
@@ -74,5 +100,6 @@ export function useRequests() {
     fetchAllPosts,
     doSuccessRegistration,
     doFailureRegistration,
+    interceptUserAccountCreation,
   };
 }
